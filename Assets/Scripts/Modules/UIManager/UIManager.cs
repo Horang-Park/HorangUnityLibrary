@@ -25,7 +25,7 @@ namespace Modules.UIManager
 		private readonly Stack<(int, UIBase)> uiBaseUseHistory = new();
 		private bool firstUIActiveFlag;
 
-		public readonly Subject<bool> isDataProcessingComplete = new();
+		public readonly BoolReactiveProperty isDataProcessingComplete = new();
 
 		/// <summary>
 		/// BaseUI를 상속받은 UI Object 반환
@@ -104,7 +104,7 @@ namespace Modules.UIManager
 				uiBaseDictionary.Add(key, ui.uiBase);
 			}
 
-			isDataProcessingComplete.OnNext(true);
+			isDataProcessingComplete.Value = true;
 		}
 
 		private bool IsKeyValid(string key, out UIBase uiBase)

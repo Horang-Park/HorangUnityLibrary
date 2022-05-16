@@ -5,11 +5,8 @@ namespace Modules.PlayerPrefs
 {
 	public static class PlayerPrefsManager
 	{
-		private static GetPlayerPrefs getPlayerPrefs = new();
-		public static GetPlayerPrefs GetPlayerPrefs => getPlayerPrefs;
-
-		private static SetPlayerPrefs setPlayerPrefs = new();
-		public static SetPlayerPrefs SetPlayerPrefs => setPlayerPrefs;
+		public static GetPlayerPrefs GetPlayerPrefs { get; } = new();
+		public static SetPlayerPrefs SetPlayerPrefs { get; } = new();
 
 		/// <summary>
 		/// 키가 존재하는지 확인
@@ -39,6 +36,16 @@ namespace Modules.PlayerPrefs
 			}
 			
 			Logger.Log(LoggerPriority.Warning, $"{key}이(가) 존재하지 않거나, 이미 삭제되었습니다.");
+		}
+
+		/// <summary>
+		/// 키 전체 삭제
+		/// </summary>
+		public static void DeleteEveryKey()
+		{
+			UnityEngine.PlayerPrefs.DeleteAll();
+			
+			Logger.Log(LoggerPriority.Verbose, $"PlayerPrefs 데이터가 모두 삭제되었습니다.");
 		}
 	}
 }

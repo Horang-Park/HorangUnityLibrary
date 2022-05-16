@@ -72,7 +72,7 @@ namespace Modules.UIManager
 			data.Item2.Hide();
 		}
 
-		private void Start()
+		private void Awake()
 		{
 			DataPostProcessing();
 		}

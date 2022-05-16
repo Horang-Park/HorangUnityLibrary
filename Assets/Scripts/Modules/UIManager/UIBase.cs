@@ -46,17 +46,17 @@ namespace Modules.UIManager
 
 		protected virtual void OnAfterShowInitialize()
 		{
-			Logger.Log(LoggerPriority.Verbose, $"{gameObject.name} UI가 켜지고 초기화 되었습니다.");
+			Logger.Log(LogPriority.Verbose, $"{gameObject.name} UI가 켜지고 초기화 되었습니다.");
 		}
 
 		protected virtual void OnAfterHideInitialize()
 		{
-			Logger.Log(LoggerPriority.Verbose, $"{gameObject.name} UI가 숨겨지고 초기화 되었습니다.");
+			Logger.Log(LogPriority.Verbose, $"{gameObject.name} UI가 숨겨지고 초기화 되었습니다.");
 		}
 
 		protected virtual void OnInitialize()
 		{
-			Logger.Log(LoggerPriority.Verbose, $"{gameObject.name} UI가 초기화 되었습니다.");
+			Logger.Log(LogPriority.Verbose, $"{gameObject.name} UI가 초기화 되었습니다.");
 		}
 
 		private void Initialize()

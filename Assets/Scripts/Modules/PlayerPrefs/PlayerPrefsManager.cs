@@ -32,10 +32,10 @@ namespace Modules.PlayerPrefs
 			{
 				UnityEngine.PlayerPrefs.DeleteKey(encryptedKey);
 				
-				Logger.Log(LoggerPriority.Verbose, $"{key}이(가) 삭제되었습니다.");
+				Logger.Log(LogPriority.Verbose, $"{key}이(가) 삭제되었습니다.");
 			}
 			
-			Logger.Log(LoggerPriority.Warning, $"{key}이(가) 존재하지 않거나, 이미 삭제되었습니다.");
+			Logger.Log(LogPriority.Warning, $"{key}이(가) 존재하지 않거나, 이미 삭제되었습니다.");
 		}
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace Modules.PlayerPrefs
 		{
 			UnityEngine.PlayerPrefs.DeleteAll();
 			
-			Logger.Log(LoggerPriority.Verbose, $"PlayerPrefs 데이터가 모두 삭제되었습니다.");
+			Logger.Log(LogPriority.Verbose, $"PlayerPrefs 데이터가 모두 삭제되었습니다.");
 		}
 	}
 }

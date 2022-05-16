@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Utilities
 {
-	public enum LoggerPriority
+	public enum LogPriority
 	{
 		Debug,
 		Verbose,
@@ -26,7 +26,7 @@ namespace Utilities
 		};
 		private const string LoggerPriorityColorPostfix = "</color>";
 
-		private const string FontSizePrefix = "<size=16>";
+		private const string FontSizePrefix = "<size=12>";
 		private const string FontSizePostfix = "</size>";
 		private const string FontBoldPrefix = "<b>";
 		private const string FontBoldPostfix = "</b>";
@@ -48,7 +48,7 @@ namespace Utilities
 		/// </summary>
 		/// <param name="priority">중요도</param>
 		/// <param name="message">메세지</param>
-		public static void Log(LoggerPriority priority, string message)
+		public static void Log(LogPriority priority, string message)
 		{
 			var st = new StackTrace(true);
 			var sf = st.GetFrame(1);
@@ -71,23 +71,23 @@ namespace Utilities
 
 			switch (priority)
 			{
-				case LoggerPriority.Debug:
+				case LogPriority.Debug:
 					UnityEngine.Debug.Log(sb.ToString());
 					sb.Clear();
 					break;
-				case LoggerPriority.Verbose:
+				case LogPriority.Verbose:
 					UnityEngine.Debug.Log(sb.ToString());
 					sb.Clear();
 					break;
-				case LoggerPriority.Warning:
+				case LogPriority.Warning:
 					UnityEngine.Debug.LogWarning(sb.ToString());
 					sb.Clear();
 					break;
-				case LoggerPriority.Error:
+				case LogPriority.Error:
 					UnityEngine.Debug.LogError(sb.ToString());
 					sb.Clear();
 					break;
-				case LoggerPriority.Exception:
+				case LogPriority.Exception:
 					UnityEngine.Debug.LogError(sb.ToString());
 					sb.Clear();
 					break;

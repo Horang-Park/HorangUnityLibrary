@@ -32,7 +32,7 @@ namespace Structural
 
 					if (FindObjectsOfType(typeof(T)).Length > 1)
 					{
-						Logger.Log(LoggerPriority.Error, $"{typeof(T)}의 Instance가 중복되었습니다. 정상동작을 보장하지 못하므로, Scene을 다시 열어주세요.");
+						Logger.Log(LogPriority.Error, $"{typeof(T)}의 Instance가 중복되었습니다. 정상동작을 보장하지 못하므로, Scene을 다시 열어주세요.");
 						
 						return instance;
 					}

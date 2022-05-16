@@ -1,54 +1,47 @@
-using System.Collections.Generic;
-using Modules.PlayerPrefs;
+using System;
+using Modules.UIManager;
+using UniRx;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using Utilities;
+using Logger = Utilities.Logger;
 
 public class Tester : MonoBehaviour
 {
-	private int testIntegerValue = 19961021;
-	private int[] testIntegerArrayValue = new int[]
-	{
-		2022,
-		05,
-		13,
-		16,
-		04,
-	};
-	
-	private float testFloatValue = 3.14159f;
-	private float[] testFloatArrayValue = new float[]
-	{
-		20.22f,
-		0.5f,
-		1.3f,
-		1.6f,
-		0.5f,
-	};
-	
-	private string testStringValue = "This is test string";
-
-	private int getIntegerValue;
-	private List<int> getIntegerArrayValue;
-	
-	private float getFloatValue;
-	private List<float> getFloatArrayValue;
-
-	private string getStringValue;
-
 	private void Awake()
 	{
-		PlayerPrefsManager.SetPlayerPrefs.SetInt("TestInteger", testIntegerValue);
-		PlayerPrefsManager.SetPlayerPrefs.SetInt("TestIntegerArray", testIntegerArrayValue);
-		PlayerPrefsManager.SetPlayerPrefs.SetFloat("TestFloat", testFloatValue);
-		PlayerPrefsManager.SetPlayerPrefs.SetFloat("TestFloatArray", testFloatArrayValue);
-		PlayerPrefsManager.SetPlayerPrefs.SetString("TestString", testStringValue);
+		UIManager.Instance.isDataProcessingComplete.Subscribe(b => { Logger.Log(LogPriority.Debug, "UIManager Data Postprocess->초기화 완료"); });
 	}
 
-	private void Start()
+	private void Update()
 	{
-		getIntegerValue = PlayerPrefsManager.GetPlayerPrefs.GetInt("TestInteger");
-		getIntegerArrayValue = PlayerPrefsManager.GetPlayerPrefs.GetIntArray("TestIntegerArray");
-		getFloatValue = PlayerPrefsManager.GetPlayerPrefs.GetFloat("TestFloat");
-		getFloatArrayValue = PlayerPrefsManager.GetPlayerPrefs.GetFloatArray("TestFloatArray");
-		getStringValue = PlayerPrefsManager.GetPlayerPrefs.GetString("TestString");
+		if (Input.GetKeyDown(KeyCode.F1))
+		{
+			var item = UIManager.Instance.GetUIBase<UIBase>("UI1");
+			
+			item.Show();
+		}
+		else if (Input.GetKeyDown(KeyCode.F2))
+		{
+			var item = UIManager.Instance.GetUIBase<UIBase>("UI2");
+			
+			item.Show();
+		}
+		else if (Input.GetKeyDown(KeyCode.F3))
+		{
+			var item = UIManager.Instance.GetUIBase<UIBase>("UI3");
+			
+			item.Show();
+		}
+		else if (Input.GetKeyDown(KeyCode.F4))
+		{
+			var item = UIManager.Instance.GetUIBase<UIBase>("UI4");
+			
+			item.Show();
+		}
+		else if (Input.GetKeyDown(KeyCode.F12))
+		{
+			UIManager.Instance.PutBackUIBase();
+		}
 	}
 }

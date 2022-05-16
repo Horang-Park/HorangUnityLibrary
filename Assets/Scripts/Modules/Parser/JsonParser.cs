@@ -25,7 +25,7 @@ namespace Modules.Parser
 			}
 			catch (JsonException exception)
 			{
-				Logger.Log(LoggerPriority.Exception, exception.ToString());
+				Logger.Log(LogPriority.Exception, exception.ToString());
 
 				throw;
 			}
@@ -48,7 +48,7 @@ namespace Modules.Parser
 			}
 			catch (JsonException exception)
 			{
-				Logger.Log(LoggerPriority.Exception, exception.ToString());
+				Logger.Log(LogPriority.Exception, exception.ToString());
 
 				throw;
 			}
@@ -68,7 +68,7 @@ namespace Modules.Parser
 			}
 			catch (JsonException exception)
 			{
-				Logger.Log(LoggerPriority.Exception, exception.ToString());
+				Logger.Log(LogPriority.Exception, exception.ToString());
 			}
 
 			return default;

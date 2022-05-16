@@ -86,7 +86,7 @@ namespace Modules.UIManager
 				
 				ui.uiBase.Hide();
 
-				if (ui.useFirstUI )
+				if (ui.useFirstUI)
 				{
 					if (firstUIActiveFlag is not true)
 					{

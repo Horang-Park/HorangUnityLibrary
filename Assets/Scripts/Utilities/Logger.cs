@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 namespace Utilities
@@ -27,11 +28,16 @@ namespace Utilities
 
 		private const string FontSizePrefix = "<size=16>";
 		private const string FontSizePostfix = "</size>";
-
 		private const string FontBoldPrefix = "<b>";
 		private const string FontBoldPostfix = "</b>";
 
+		private static readonly char[] PathSeparator = { '\\', '/' };
+		
 		private const string Separator = " ▶ ";
+		private const char LineNumberSeparator = ':';
+
+		private const char OpenBracket = '[';
+		private const string CloseBracket = "] ";
 
 		/// <summary>
 		/// Log 띄우기
@@ -44,15 +50,19 @@ namespace Utilities
 		/// <param name="message">메세지</param>
 		public static void Log(LoggerPriority priority, string message)
 		{
-			var st = new StackTrace();
+			var st = new StackTrace(true);
 			var sf = st.GetFrame(1);
-			var mn = sf.GetMethod().Name;
-			var fc = LoggerPriorityColorPrefix[(int)priority];
-			
+			var fn = Path.GetFileNameWithoutExtension(sf.GetFileName()?.Split(PathSeparator, StringSplitOptions.RemoveEmptyEntries)[^1]);
 			var sb = new StringBuilder(FontBoldPrefix);
+			
 			sb.Append(FontSizePrefix);
-			sb.Append(fc);
-			sb.Append(mn);
+			sb.Append(LoggerPriorityColorPrefix[(int)priority]);
+			sb.Append(OpenBracket);
+			sb.Append(fn);
+			sb.Append(LineNumberSeparator);
+			sb.Append(sf.GetFileLineNumber());
+			sb.Append(CloseBracket);
+			sb.Append(sf.GetMethod().Name);
 			sb.Append(Separator);
 			sb.Append(message);
 			sb.Append(LoggerPriorityColorPostfix);

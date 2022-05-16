@@ -91,6 +91,8 @@ namespace Modules.UIManager
 					if (firstUIActiveFlag is not true)
 					{
 						ui.uiBase.Show();
+						
+						uiBaseUseHistory.Push((key, ui.uiBase));
 
 						firstUIActiveFlag = true;
 					}

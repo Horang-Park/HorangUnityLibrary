@@ -63,7 +63,7 @@ namespace Modules.UIManager
 		{
 			if (uiBaseUseHistory.Count < 1)
 			{
-				Logger.Log(LogPriority.Warning, $"현재 켜져있는 UI가 없습니다.");
+				Logger.Log(LogPriority.Warning, "현재 켜져있는 UI가 없습니다.");
 				
 				return;
 			}
@@ -96,7 +96,7 @@ namespace Modules.UIManager
 					}
 					else
 					{
-						Logger.Log(LogPriority.Error, $"첫번째로 보여줄 UI 화면은 2개 이상이 될 수 없습니다. 인스펙터를 확인해주세요.");
+						Logger.Log(LogPriority.Error, "첫번째로 보여줄 UI 화면은 2개 이상이 될 수 없습니다. 인스펙터를 확인해주세요.");
 					}
 				}
 				

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using Structural;
 using UniRx;
@@ -98,7 +97,7 @@ namespace Modules.UIManager
 					}
 					else
 					{
-						Logger.Log(LogPriority.Error, "첫번째로 보여줄 UI 화면은 2개 이상이 될 수 없습니다. 인스펙터를 확인해주세요.");
+						Logger.Log(LogPriority.Error, "첫번째로 보여줄 UI는 2개 이상이 될 수 없습니다. 인스펙터를 확인해주세요.");
 					}
 				}
 				

@@ -31,9 +31,9 @@ namespace Utilities
 		/// <returns>복호화 된 데이터</returns>
 		public static string Decrypt(string toDecrypt)
 		{
-			var toEncryptArray = Convert.FromBase64String(toDecrypt);
+			var toDecryptArray = Convert.FromBase64String(toDecrypt);
 			var cTransform = RijndaelManaged.CreateDecryptor();
-			var resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+			var resultArray = cTransform.TransformFinalBlock(toDecryptArray, 0, toDecryptArray.Length);
 			
 			return Encoding.UTF8.GetString(resultArray);
 		}

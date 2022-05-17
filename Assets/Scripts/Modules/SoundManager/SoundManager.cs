@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Structural;
 using UnityEngine;
-using Utilities;
-using Logger = Utilities.Logger;
 
 namespace Modules.SoundManager
 {
@@ -13,18 +11,9 @@ namespace Modules.SoundManager
 
 		private readonly Dictionary<int, AudioClipData> audioClips = new();
 		
-		private bool IsValidKey(string key)
+		private bool IsExistKey(int key)
 		{
-			var hashKey = key.GetHashCode();
-
-			if (!audioClips.ContainsKey(hashKey))
-			{
-				return true;
-			}
-			
-			Logger.Log(LogPriority.Error, $"{key} 오디오 클립은 이미 등록되어 있습니다.");
-
-			return false;
+			return audioClips.ContainsKey(key);
 		}
 	}
 }

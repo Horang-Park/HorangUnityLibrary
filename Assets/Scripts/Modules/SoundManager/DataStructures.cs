@@ -15,6 +15,10 @@ namespace Modules.SoundManager
 	{
 		public AudioClipType type;
 		public AudioClip clip;
+		public int hashKey;
+		
 		public string name;
+		public float volume;
+		public float panning;
 	}
 }

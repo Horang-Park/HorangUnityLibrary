@@ -37,11 +37,12 @@ public class SoundManagerCustom : Editor
 		
 		EditorGUILayout.Space();
 		EditorGUILayout.Space();
+
+		#region 오디오 클립 속성 지정
 		
 		GUILayout.BeginVertical();
 		GUILayout.Label("<color=yellow><b><size=13>오디오 클립 임포트 세팅</size></b></color>", labelTextGuiStyle);
-
-		// 오디오 클릭 속성 지정
+		
 		// 타입 선택
 		EditorGUILayout.BeginHorizontal();
 		GUILayout.Label("<color=white>타입</color>", labelTextGuiStyle);
@@ -80,15 +81,16 @@ public class SoundManagerCustom : Editor
 
 		selectAudioClipNameStringBuilder.Append("</size></b></color>");
 		
-		//GUILayout.Label(selectAudioClipNameStringBuilder.ToString(), labelTextGuiStyle);
 		EditorGUILayout.LabelField(selectAudioClipNameStringBuilder.ToString(), labelTextGuiStyle);
 		GUILayout.EndVertical();
-		////////////////////////////////////////////////////////////
+		
+		#endregion
 
 		EditorGUILayout.Space();
 		EditorGUILayout.Space();
+
+		#region 오디오 클립 불러오기
 		
-		// 등록
 		EditorGUILayout.BeginHorizontal();
 		GUILayout.Label("<color=yellow><b><size=13>오디오 클립 등록</size></b></color>", labelTextGuiStyle);
 		GUILayout.Label("<color=#ff00ff><b><size=13>※ 인스펙터 잠금을 사용해주세요. ※</size></b></color>", labelTextGuiStyle);
@@ -117,12 +119,14 @@ public class SoundManagerCustom : Editor
 			}
 		}
 		EditorGUILayout.EndVertical();
-		////////////////////////////////////////////////////////////
+		
+		#endregion
 		
 		EditorGUILayout.Space();
 		EditorGUILayout.Space();
 
-		// 삭제
+		#region 오디오 클립 삭제
+		
 		GUILayout.Label("<color=red><b><size=13>오디오 클립 삭제</size></b></color>", labelTextGuiStyle);
 		EditorGUILayout.BeginVertical();
 
@@ -140,15 +144,14 @@ public class SoundManagerCustom : Editor
 		}
 		EditorGUILayout.EndHorizontal();
 		
-		
-		
 		if (GUILayout.Button("오디오 클립 전체 삭제", GUILayout.Height(30.0f)))
 		{
 			SoundManager.Instance.RemoveAllAudioClip();
 		}
 		EditorGUILayout.EndVertical();
 		GUI.color = originalColor;
-		////////////////////////////////////////////////////////////
+		
+		#endregion
 	}
 
 	private static IEnumerable<AudioClip> GetSelectedAudioClips()

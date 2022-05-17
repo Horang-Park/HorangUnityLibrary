@@ -4,6 +4,8 @@ using System.Text;
 using Modules.SoundManager;
 using UnityEditor;
 using UnityEngine;
+using Utilities;
+using Logger = Utilities.Logger;
 
 [CustomEditor(typeof(SoundManager))]
 public class SoundManagerCustom : Editor
@@ -138,8 +140,15 @@ public class SoundManagerCustom : Editor
 		if (GUILayout.Button("선택한 오디오 클립 삭제", GUILayout.Height(30.0f)))
 		{
 			var key = deleteAudioClipName.GetHashCode();
-			
-			SoundManager.Instance.RemoveSpecificAudioClip(key);
+
+			if (SoundManager.Instance.RemoveSpecificAudioClip(key))
+			{
+				Logger.Log(LogPriority.Verbose, $"{deleteAudioClipName} 오디오 클립이 삭제되었습니다.");
+
+				deleteAudioClipName = string.Empty;
+				
+				return;
+			}
 		}
 		EditorGUILayout.EndHorizontal();
 		

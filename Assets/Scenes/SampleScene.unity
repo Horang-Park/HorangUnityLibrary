@@ -589,7 +589,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27416ae361f047b88cbf1af0a675133f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentAddedAudioClip: []
+  currentAddedAudioClip:
+  - type: 0
+    clip: {fileID: 8300000, guid: 2b3cc68056c3ed549ad47e0b61a6483d, type: 3}
+    hashKey: 1869365251
+    name: EG_LT_DE01 1
+    volume: 1
+    panning: 0
+  - type: 0
+    clip: {fileID: 8300000, guid: c5a6af7adb029df4ba0967bc4de9e7ac, type: 3}
+    hashKey: -732379731
+    name: The Space (Looping Middle)
+    volume: 1
+    panning: 0
+  - type: 0
+    clip: {fileID: 8300000, guid: b083b7753425f9c48ae0b375d6568e2f, type: 3}
+    hashKey: -321646850
+    name: NearExplosionA
+    volume: 1
+    panning: 0
+  - type: 0
+    clip: {fileID: 8300000, guid: 9cb65eb2505fbf443ac876ba177374f9, type: 3}
+    hashKey: 339848825
+    name: explosion
+    volume: 1
+    panning: 0
+  - type: 0
+    clip: {fileID: 8300000, guid: 3e0f365202a527243910b685f4efd0e3, type: 3}
+    hashKey: 706565837
+    name: EG_LT_DE01 3
+    volume: 1
+    panning: 0
+  - type: 0
+    clip: {fileID: 8300000, guid: 34c638d8d99ccfd44a261f13505ab317, type: 3}
+    hashKey: -1779195987
+    name: laser
+    volume: 1
+    panning: 0
+  - type: 0
+    clip: {fileID: 8300000, guid: 537de1b23511a8b4d89ebec9f5487ba7, type: 3}
+    hashKey: -2022317518
+    name: EG_LT_DE01 2
+    volume: 1
+    panning: 0
+  - type: 0
+    clip: {fileID: 8300000, guid: aa66f043685a31e4bb90d0b6128bc3e1, type: 3}
+    hashKey: 516594183
+    name: laser2
+    volume: 1
+    panning: 0
+  - type: 0
+    clip: {fileID: 8300000, guid: 86a8a873ba41bf341a21a60c30ce1e5a, type: 3}
+    hashKey: -221577896
+    name: EG_LT_DE01
+    volume: 1
+    panning: 0
 --- !u!4 &1064402397
 Transform:
   m_ObjectHideFlags: 0

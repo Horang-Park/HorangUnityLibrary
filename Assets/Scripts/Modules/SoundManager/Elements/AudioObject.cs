@@ -46,6 +46,16 @@ namespace Modules.SoundManager
 			audioSource.Play();
 		}
 
+		public void Pause()
+		{
+			audioSource.Pause();
+		}
+
+		public void Stop()
+		{
+			Destroy(gameObject);
+		}
+
 		public void FadeOut(out IDisposable disposable)
 		{
 			if (!audioSource.isPlaying)

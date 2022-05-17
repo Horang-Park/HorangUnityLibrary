@@ -36,6 +36,8 @@ public class SoundManagerCustom : Editor
 			wordWrap = true,
 		};
 
+		EditorStyles.textField.wordWrap = true;
+
 		base.OnInspectorGUI();
 		
 		EditorGUILayout.Space();
@@ -137,7 +139,6 @@ public class SoundManagerCustom : Editor
 		
 		GUI.backgroundColor = Color.red;
 		
-		//deleteAudioClipName = GUILayout.TextArea(deleteAudioClipName, int.MaxValue, GUILayout.Height(30.0f));
 		deleteAudioClipName = EditorGUILayout.TextField(deleteAudioClipName, GUILayout.Height(30.0f));
 			
 		if (GUILayout.Button("입력한 오디오 클립 삭제", GUILayout.Height(30.0f)))

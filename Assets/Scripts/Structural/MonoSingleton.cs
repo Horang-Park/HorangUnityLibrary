@@ -10,17 +10,11 @@ namespace Structural
 		private static T instance;
 
 		private static readonly object Lock = new object();
-		private static bool applicationIsQuitting = false;
 
 		public static T Instance
 		{
 			get
 			{
-				if (applicationIsQuitting)
-				{
-					return null;
-				}
-
 				lock (Lock)
 				{
 					if (instance != null)
@@ -51,11 +45,6 @@ namespace Structural
 					return instance;
 				}
 			}
-		}
-		
-		public void OnDestroy()
-		{
-			applicationIsQuitting = true;
 		}
 	}
 }

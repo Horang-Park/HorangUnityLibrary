@@ -11,10 +11,11 @@ using Logger = Utilities.Logger;
 public class SoundManagerCustom : Editor
 {
 	private AudioClipType audioClipType;
+	
 	private float audioClipVolume = 1.0f;
 	private float audioClipPanning;
 	private string deleteAudioClipName;
-	
+	private bool dictionaryAlreadyUpdated;
 	private string[] audioClipTypeOptions = new[]
 	{
 		"BGM",
@@ -22,6 +23,7 @@ public class SoundManagerCustom : Editor
 		"LoopableSFX",
 		"OneShotSFX",
 	};
+	
 	private const string SelectedAudioClipNameSeparator = "\n";
 	
 	public override void OnInspectorGUI()
@@ -116,7 +118,7 @@ public class SoundManagerCustom : Editor
 					panning = audioClipPanning,
 				};
 				
-				SoundManager.Instance.AddAudioClip(audioData);
+				SoundManager.AddAudioClip(audioData);
 			}
 		}
 		EditorGUILayout.EndVertical();
@@ -135,13 +137,14 @@ public class SoundManagerCustom : Editor
 		
 		GUI.backgroundColor = Color.red;
 		
-		deleteAudioClipName = GUILayout.TextArea(deleteAudioClipName, int.MaxValue, GUILayout.Height(30.0f));
+		//deleteAudioClipName = GUILayout.TextArea(deleteAudioClipName, int.MaxValue, GUILayout.Height(30.0f));
+		deleteAudioClipName = EditorGUILayout.TextField(deleteAudioClipName, GUILayout.Height(30.0f));
 			
-		if (GUILayout.Button("선택한 오디오 클립 삭제", GUILayout.Height(30.0f)))
+		if (GUILayout.Button("입력한 오디오 클립 삭제", GUILayout.Height(30.0f)))
 		{
 			var key = deleteAudioClipName.GetHashCode();
 
-			if (SoundManager.Instance.RemoveSpecificAudioClip(key))
+			if (SoundManager.RemoveSpecificAudioClip(key))
 			{
 				Logger.Log(LogPriority.Verbose, $"{deleteAudioClipName} 오디오 클립이 삭제되었습니다.");
 
@@ -154,7 +157,7 @@ public class SoundManagerCustom : Editor
 		
 		if (GUILayout.Button("오디오 클립 전체 삭제", GUILayout.Height(30.0f)))
 		{
-			SoundManager.Instance.RemoveAllAudioClip();
+			SoundManager.RemoveAllAudioClip();
 		}
 		EditorGUILayout.EndVertical();
 		GUI.color = originalColor;
@@ -177,6 +180,6 @@ public class SoundManagerCustom : Editor
 
 	private void OnEnable()
 	{
-		SoundManager.Instance.UpdateDictionary();
+		SoundManager.UpdateDictionary();
 	}
 }

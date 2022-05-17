@@ -69,6 +69,27 @@ namespace Modules.SoundManager
 		}
 
 		/// <summary>
+		/// 오디오 재생 재개
+		/// <br></br>
+		/// 재생이 완료된 오디오일 경우, Play처럼 동작함
+		/// </summary>
+		/// <param name="audioClipName">다시 재생할 오디오 클립 이름</param>
+		public void Resume(string audioClipName)
+		{
+			var hashKey = audioClipName.GetHashCode();
+			AudioObject audioObject;
+
+			if (TryGetAudioObject(hashKey, out audioObject) is false)
+			{
+				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오 재생을 재개 할 수 없습니다.");
+
+				return;
+			}
+			
+			audioObject.Resume();
+		}
+
+		/// <summary>
 		/// 오디오 정지
 		/// <br></br>
 		/// 오디오 오브젝트를 파괴함

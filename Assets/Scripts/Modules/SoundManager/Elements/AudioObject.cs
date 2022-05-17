@@ -51,6 +51,11 @@ namespace Modules.SoundManager
 			audioSource.Pause();
 		}
 
+		public void Resume()
+		{
+			audioSource.Play();
+		}
+
 		public void Stop()
 		{
 			Destroy(gameObject);

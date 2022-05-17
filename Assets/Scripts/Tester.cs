@@ -22,7 +22,17 @@ public class Tester : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.F1))
 		{
-			SoundManager.Instance.Play("damage");
+			SoundManager.Instance.Pause("EG_LT_DE01 3");
+		}
+
+		if (Input.GetKeyDown(KeyCode.F2))
+		{
+			SoundManager.Instance.Resume("EG_LT_DE01 3");
+		}
+
+		if (Input.GetKeyDown(KeyCode.F12))
+		{
+			SoundManager.Instance.Stop("EG_LT_DE01 3");
 		}
 	}
 }

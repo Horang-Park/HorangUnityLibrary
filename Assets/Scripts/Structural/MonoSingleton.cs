@@ -8,7 +8,6 @@ namespace Structural
 	public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 	{
 		private static T instance;
-
 		private static readonly object Lock = new object();
 
 		public static T Instance

@@ -177,9 +177,4 @@ public class SoundManagerCustom : Editor
 
 		return clipList;
 	}
-
-	private void OnEnable()
-	{
-		SoundManager.UpdateDictionary();
-	}
 }

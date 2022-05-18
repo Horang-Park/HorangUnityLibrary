@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Text;
 using UniRx;
-using UnityEditor;
 using UnityEngine;
 using Utilities;
 using Logger = Utilities.Logger;
@@ -83,30 +82,23 @@ namespace Modules.SoundManager
 			Destroy(gameObject);
 		}
 
-		public void FadeOut(out IDisposable disposable)
+		public void FadeOut()
 		{
 			if (!audioSource.isPlaying)
 			{
 				Logger.Log(LogPriority.Warning, $"{gameObject.name} 오디오가 재생중이지 않아 페이드 아웃을 적용할 수 없습니다.");
 
-				disposable = null;
+				return;
 			}
-			
-			disposable = Observable.FromMicroCoroutine(FadeOutCoroutine)
-				.Subscribe();
+
+			Observable.FromMicroCoroutine(FadeOutCoroutine).Subscribe();
 		}
 
-		public void FadeIn(out IDisposable disposable)
+		public void FadeIn()
 		{
-			if (!audioSource.isPlaying)
-			{
-				Logger.Log(LogPriority.Warning, $"{gameObject.name} 오디오가 재생중이지 않아 페이드 인을 적용할 수 없습니다.");
+			audioSource.volume = 0.0f;
 
-				disposable = null;
-			}
-			
-			disposable = Observable.FromMicroCoroutine(FadeInCoroutine)
-				.Subscribe();
+			Observable.FromMicroCoroutine(FadeInCoroutine).Subscribe();
 		}
 
 		private IEnumerator FadeOutCoroutine()
@@ -117,11 +109,15 @@ namespace Modules.SoundManager
 				
 				yield return null;
 			}
+			
+			Stop();
 		}
 
 		private IEnumerator FadeInCoroutine()
 		{
-			while (audioSource.volume <= targetVolume)
+			Play();
+			
+			while (audioSource.volume < targetVolume)
 			{
 				audioSource.volume += Time.deltaTime;
 				

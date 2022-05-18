@@ -15,7 +15,7 @@ public class Tester : MonoBehaviour
 
 	private void Start()
 	{
-		SoundManager.Instance.Play("EG_LT_DE01 3");
+		SoundManager.Instance.Play("EG_LT_DE01 3", true);
 	}
 
 	private void Update()
@@ -32,7 +32,7 @@ public class Tester : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.F12))
 		{
-			SoundManager.Instance.Stop("EG_LT_DE01 3");
+			SoundManager.Instance.Stop("EG_LT_DE01 3", true);
 		}
 	}
 }

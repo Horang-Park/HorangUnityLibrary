@@ -49,16 +49,5 @@ namespace Modules.SoundManager
 			Instance.currentAddedAudioClip.Clear();
 			Instance.audioClipDatas.Clear();
 		}
-
-		public static void UpdateDictionary()
-		{
-			if (Instance.currentAddedAudioClip is not null && Instance.currentAddedAudioClip.Count > 0 && Instance.audioClipDatas.Count <= 0)
-			{
-				foreach (var clip in Instance.currentAddedAudioClip)
-				{
-					Instance.audioClipDatas.Add(clip.name.GetHashCode(), clip);
-				}
-			}
-		}
 	}
 }

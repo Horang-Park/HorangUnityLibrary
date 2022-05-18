@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Structural;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using Utilities;
 using Logger = Utilities.Logger;
@@ -15,11 +14,22 @@ namespace Modules.SoundManager
 		private readonly Dictionary<int, AudioClipData> audioClipDatas = new();
 		private readonly Dictionary<int, AudioObject> audioObjects = new();
 
+		private void Awake()
+		{
+			if (currentAddedAudioClip is not null && currentAddedAudioClip.Count > 0 && audioClipDatas.Count <= 0)
+			{
+				foreach (var clip in currentAddedAudioClip)
+				{
+					audioClipDatas.Add(clip.name.GetHashCode(), clip);
+				}
+			}
+		}
+
 		/// <summary>
 		/// 오디오 재생
 		/// </summary>
 		/// <param name="audioClipName">재생할 오디오 클립 이름</param>
-		public void Play(string audioClipName)
+		public void Play(string audioClipName, bool useFadeIn = false)
 		{
 			var hashKey = audioClipName.GetHashCode();
 			
@@ -46,7 +56,14 @@ namespace Modules.SoundManager
 				audioObject = audioObjects[hashKey];
 			}
 			
-			audioObject.Play();
+			if (useFadeIn)
+			{
+				audioObject.FadeIn();
+			}
+			else
+			{
+				audioObject.Play();
+			}
 		}
 
 		/// <summary>
@@ -93,7 +110,7 @@ namespace Modules.SoundManager
 		/// 오디오 오브젝트를 파괴함
 		/// </summary>
 		/// <param name="audioClipName">정지할 오디오 클립 이름 (재생중이거나 일시정지 상태여야 작동)</param>
-		public void Stop(string audioClipName)
+		public void Stop(string audioClipName, bool useFadeOut = false)
 		{
 			var hashKey = audioClipName.GetHashCode();
 			AudioObject audioObject;
@@ -104,10 +121,19 @@ namespace Modules.SoundManager
 
 				return;
 			}
+
+			if (useFadeOut)
+			{
+				audioObject.FadeOut();
+				
+				audioObjects.Remove(hashKey);
+			}
+			else
+			{
+				audioObject.Stop();
 			
-			audioObject.Stop();
-			
-			audioObjects.Remove(hashKey);
+				audioObjects.Remove(hashKey);
+			}
 		}
 		
 		private bool IsExistAudioClipKey(int key)

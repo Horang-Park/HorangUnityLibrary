@@ -13,7 +13,9 @@ namespace Modules.SoundManager
 	{
 		private AudioClipData audioClipData;
 		private AudioSource audioSource;
+		
 		private float targetVolume;
+		private bool fromPause;
 
 		public void Initialize(AudioClipData clipData)
 		{
@@ -44,16 +46,23 @@ namespace Modules.SoundManager
 		public void Play()
 		{
 			audioSource.Play();
+
+			fromPause = false;
 		}
 
 		public void Pause()
 		{
 			audioSource.Pause();
+
+			fromPause = true;
 		}
 
 		public void Resume()
 		{
-			audioSource.Play();
+			if (fromPause)
+			{
+				audioSource.Play();
+			}
 		}
 
 		public void Stop()

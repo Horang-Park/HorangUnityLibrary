@@ -70,8 +70,6 @@ namespace Modules.SoundManager
 
 		/// <summary>
 		/// 오디오 재생 재개
-		/// <br></br>
-		/// 재생이 완료된 오디오일 경우, Play처럼 동작함
 		/// </summary>
 		/// <param name="audioClipName">다시 재생할 오디오 클립 이름</param>
 		public void Resume(string audioClipName)

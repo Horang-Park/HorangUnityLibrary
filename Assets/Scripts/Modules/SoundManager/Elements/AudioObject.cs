@@ -39,6 +39,19 @@ namespace Modules.SoundManager
 			audioSource.clip = clipData.clip;
 			audioSource.volume = clipData.volume;
 			audioSource.panStereo = clipData.panning;
+
+			switch (clipData.type)
+			{
+				case AudioClipType.BGM:
+				case AudioClipType.LoopableSFX:
+					audioSource.loop = true;
+					break;
+				case AudioClipType.OneShotSFX:
+					audioSource.loop = false;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 			
 			sb.Clear();
 		}

@@ -5,7 +5,6 @@ namespace Modules.SoundManager
 	public enum AudioClipType
 	{
 		BGM,
-		StoppableSFX,
 		LoopableSFX,
 		OneShotSFX,
 	}

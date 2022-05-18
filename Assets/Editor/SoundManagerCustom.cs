@@ -19,7 +19,6 @@ public class SoundManagerCustom : Editor
 	private string[] audioClipTypeOptions = new[]
 	{
 		"BGM",
-		"StoppableSFX",
 		"LoopableSFX",
 		"OneShotSFX",
 	};

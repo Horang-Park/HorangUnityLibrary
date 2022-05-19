@@ -21,3 +21,5 @@ namespace Modules.SoundManager
 		public float panning;
 	}
 }
+
+// Code Author: ChangsooPark

@@ -86,3 +86,5 @@ namespace Modules.Parser
 		};
 	}
 }
+
+// Code Author: ChangsooPark

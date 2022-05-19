@@ -5,3 +5,5 @@
 		public static readonly char ArraySeparator = '\t';
 	}
 }
+
+// Code Author: ChangsooPark

@@ -178,3 +178,5 @@ public class SoundManagerCustom : Editor
 		return clipList;
 	}
 }
+
+// Code Author: ChangsooPark

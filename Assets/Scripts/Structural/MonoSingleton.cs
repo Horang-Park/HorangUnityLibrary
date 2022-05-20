@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using UnityEngine;
 using Utilities;
 using Logger = Utilities.Logger;
@@ -39,11 +40,16 @@ namespace Structural
 					instance = singleton.AddComponent<T>();
 					singleton.name = new StringBuilder("[Singleton] ").Append(typeof(T)).ToString();
 
-					DontDestroyOnLoad(singleton);
+					
 
 					return instance;
 				}
 			}
+		}
+
+		protected virtual void Awake()
+		{
+			DontDestroyOnLoad(gameObject);
 		}
 	}
 }

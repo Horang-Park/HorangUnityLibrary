@@ -13,18 +13,7 @@ namespace Modules.SoundManager
 
 		private readonly Dictionary<int, AudioClipData> audioClipDatas = new();
 		private readonly Dictionary<int, AudioObject> audioObjects = new();
-
-		private void Awake()
-		{
-			if (currentAddedAudioClip is not null && currentAddedAudioClip.Count > 0 && audioClipDatas.Count <= 0)
-			{
-				foreach (var clip in currentAddedAudioClip)
-				{
-					audioClipDatas.Add(clip.name.GetHashCode(), clip);
-				}
-			}
-		}
-
+		
 		/// <summary>
 		/// 오디오 재생
 		/// </summary>
@@ -133,6 +122,19 @@ namespace Modules.SoundManager
 				audioObject.Stop();
 			
 				audioObjects.Remove(hashKey);
+			}
+		}
+		
+		protected override void Awake()
+		{
+			base.Awake();
+			
+			if (currentAddedAudioClip is not null && currentAddedAudioClip.Count > 0 && audioClipDatas.Count <= 0)
+			{
+				foreach (var clip in currentAddedAudioClip)
+				{
+					audioClipDatas.Add(clip.name.GetHashCode(), clip);
+				}
 			}
 		}
 		

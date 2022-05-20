@@ -8,7 +8,7 @@ using Logger = Utilities.Logger;
 
 namespace Modules.UIManager
 {
-	public class UIManager : MonoSingleton<UIManager>
+	public class UIManager : MonoBehaviour
 	{
 		[System.Serializable]
 		public struct UIDataType

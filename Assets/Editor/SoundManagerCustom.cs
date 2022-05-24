@@ -10,7 +10,7 @@ using Logger = Utilities.Logger;
 [CustomEditor(typeof(SoundManager))]
 public class SoundManagerCustom : Editor
 {
-	private AudioClipType audioClipType;
+	private AudioClipCategory audioClipCategory;
 	
 	private float audioClipVolume = 1.0f;
 	private float audioClipPanning;
@@ -21,6 +21,7 @@ public class SoundManagerCustom : Editor
 		"BGM",
 		"LoopableSFX",
 		"OneShotSFX",
+		"QuestionSFX",
 	};
 	
 	private const string SelectedAudioClipNameSeparator = "\n";
@@ -50,7 +51,7 @@ public class SoundManagerCustom : Editor
 		// 타입 선택
 		EditorGUILayout.BeginHorizontal();
 		GUILayout.Label("<color=white>타입</color>", labelTextGuiStyle);
-		audioClipType = (AudioClipType)EditorGUILayout.Popup(string.Empty, (int)audioClipType, audioClipTypeOptions);
+		audioClipCategory = (AudioClipCategory)EditorGUILayout.Popup(string.Empty, (int)audioClipCategory, audioClipTypeOptions);
 		EditorGUILayout.EndHorizontal();
 		
 		EditorGUILayout.Space();
@@ -111,7 +112,7 @@ public class SoundManagerCustom : Editor
 				var audioData = new AudioClipData
 				{
 					clip = audioClip,
-					type = audioClipType,
+					category = audioClipCategory,
 					hashKey = audioClip.name.GetHashCode(),
 					
 					name = audioClip.name,

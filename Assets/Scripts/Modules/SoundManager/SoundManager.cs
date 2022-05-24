@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Structural;
 using UnityEngine;
 using Utilities;
@@ -12,17 +13,19 @@ namespace Modules.SoundManager
 		[SerializeField] [ReadOnly] private List<AudioClipData> currentAddedAudioClip = new();
 
 		private readonly Dictionary<int, AudioClipData> audioClipDatas = new();
-		private readonly Dictionary<int, AudioObject> audioObjects = new();
-		
+		private readonly Dictionary<int, SoundObject> soundObjects = new();
+		private readonly Dictionary<AudioClipCategory, List<SoundObject>> soundObjectsByCategory = new();
+
 		/// <summary>
 		/// 오디오 재생
 		/// </summary>
 		/// <param name="audioClipName">재생할 오디오 클립 이름</param>
+		/// <param name="useFadeIn">페이드 인 사용 여부</param>
 		public void Play(string audioClipName, bool useFadeIn = false)
 		{
 			var hashKey = audioClipName.GetHashCode();
 			
-			AudioObject audioObject;
+			SoundObject soundObject;
 			AudioClipData clipData;
 
 			if (IsExistAudioClipKey(hashKey) is false)
@@ -34,24 +37,24 @@ namespace Modules.SoundManager
 			
 			clipData = audioClipDatas[hashKey];
 			
-			if (IsExistAudioObjectKey(hashKey) is false)
+			if (IsExistSoundObjectKey(hashKey) is false)
 			{
-				Logger.Log(LogPriority.Verbose, $"{clipData.name}의 오디오 객체가 없어, 새로 생성합니다.");
+				Logger.Log(LogPriority.Verbose, $"{clipData.name}의 사운드 객체가 없어, 새로 생성합니다.");
 
-				audioObject = CreateAudioObject(clipData);
+				soundObject = CreateAudioObject(clipData);
 			}
 			else
 			{
-				audioObject = audioObjects[hashKey];
+				soundObject = soundObjects[hashKey];
 			}
 			
 			if (useFadeIn)
 			{
-				audioObject.FadeIn();
+				soundObject.FadeIn();
 			}
 			else
 			{
-				audioObject.Play();
+				soundObject.Play();
 			}
 		}
 
@@ -62,16 +65,16 @@ namespace Modules.SoundManager
 		public void Pause(string audioClipName)
 		{
 			var hashKey = audioClipName.GetHashCode();
-			AudioObject audioObject;
+			SoundObject soundObject;
 
-			if (TryGetAudioObject(hashKey, out audioObject) is false)
+			if (TryGetAudioObject(hashKey, out soundObject) is false)
 			{
 				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오를 일시정지 할 수 없습니다.");
 
 				return;
 			}
 			
-			audioObject.Pause();
+			soundObject.Pause();
 		}
 
 		/// <summary>
@@ -81,30 +84,29 @@ namespace Modules.SoundManager
 		public void Resume(string audioClipName)
 		{
 			var hashKey = audioClipName.GetHashCode();
-			AudioObject audioObject;
+			SoundObject soundObject;
 
-			if (TryGetAudioObject(hashKey, out audioObject) is false)
+			if (TryGetAudioObject(hashKey, out soundObject) is false)
 			{
 				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오 재생을 재개 할 수 없습니다.");
 
 				return;
 			}
 			
-			audioObject.Resume();
+			soundObject.Resume();
 		}
 
 		/// <summary>
 		/// 오디오 정지
-		/// <br></br>
-		/// 오디오 오브젝트를 파괴함
 		/// </summary>
 		/// <param name="audioClipName">정지할 오디오 클립 이름 (재생중이거나 일시정지 상태여야 작동)</param>
+		/// <param name="useFadeOut">페이드 아웃 사용 여부</param>
 		public void Stop(string audioClipName, bool useFadeOut = false)
 		{
 			var hashKey = audioClipName.GetHashCode();
-			AudioObject audioObject;
+			SoundObject soundObject;
 
-			if (TryGetAudioObject(hashKey, out audioObject) is false)
+			if (TryGetAudioObject(hashKey, out soundObject) is false)
 			{
 				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오를 정지 할 수 없습니다.");
 
@@ -113,15 +115,35 @@ namespace Modules.SoundManager
 
 			if (useFadeOut)
 			{
-				audioObject.FadeOut();
-				
-				audioObjects.Remove(hashKey);
+				soundObject.FadeOut();
 			}
 			else
 			{
-				audioObject.Stop();
-			
-				audioObjects.Remove(hashKey);
+				soundObject.Stop();
+			}
+		}
+
+		/// <summary>
+		/// 카테고리에 해당하는 사운드 오브젝트 음소거
+		/// </summary>
+		/// <param name="audioClipCategory">카테고리</param>
+		public void MuteByCategory(AudioClipCategory audioClipCategory)
+		{
+			foreach (var soundObject in soundObjectsByCategory[audioClipCategory])
+			{
+				soundObject.Mute();
+			}
+		}
+
+		/// <summary>
+		/// 카테고리에 해당하는 사운드 오브젝트 음소거 해제
+		/// </summary>
+		/// <param name="audioClipCategory">카테고리</param>
+		public void UnmuteByCategory(AudioClipCategory audioClipCategory)
+		{
+			foreach (var soundObject in soundObjectsByCategory[audioClipCategory])
+			{
+				soundObject.Unmute();
 			}
 		}
 		
@@ -136,6 +158,11 @@ namespace Modules.SoundManager
 					audioClipDatas.Add(clip.name.GetHashCode(), clip);
 				}
 			}
+
+			foreach (var type in Enum.GetValues(typeof(AudioClipCategory)))
+			{
+				soundObjectsByCategory.Add((AudioClipCategory)type, new List<SoundObject>());
+			}
 		}
 		
 		private bool IsExistAudioClipKey(int key)
@@ -143,33 +170,33 @@ namespace Modules.SoundManager
 			return audioClipDatas.ContainsKey(key);
 		}
 
-		private bool IsExistAudioObjectKey(int key)
+		private bool IsExistSoundObjectKey(int key)
 		{
-			return audioObjects.ContainsKey(key);
+			return soundObjects.ContainsKey(key);
 		}
 
-		private bool TryGetAudioObject(int key, out AudioObject audioObject)
+		private bool TryGetAudioObject(int key, out SoundObject soundObject)
 		{
-			if (IsExistAudioObjectKey(key) is false)
+			if (IsExistSoundObjectKey(key) is false)
 			{
 				Logger.Log(LogPriority.Error, "재생 중이 아니거나, 등록되지 않은 오디오입니다.");
 
-				audioObject = null;
+				soundObject = null;
 
 				return false;
 			}
 
-			audioObject = audioObjects[key];
+			soundObject = soundObjects[key];
 
 			return true;
 		}
 
-		private AudioObject CreateAudioObject(AudioClipData audioClipData)
+		private SoundObject CreateAudioObject(AudioClipData audioClipData)
 		{
 			var go = new GameObject();
 			go.transform.SetParent(gameObject.transform);
 
-			if (go.AddComponent(typeof(AudioObject)) is not AudioObject co || !co)
+			if (go.AddComponent(typeof(SoundObject)) is not SoundObject co || !co)
 			{
 				Logger.Log(LogPriority.Error, $"{audioClipData.name}의 오디오 객체를 생성할 수 없습니다.");
 
@@ -178,7 +205,8 @@ namespace Modules.SoundManager
 			
 			co.Initialize(audioClipData);
 			
-			audioObjects.Add(audioClipData.hashKey, co);
+			soundObjects.Add(audioClipData.hashKey, co);
+			soundObjectsByCategory[audioClipData.category].Add(co);
 
 			return co;
 		}

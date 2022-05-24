@@ -8,7 +8,7 @@ using Logger = Utilities.Logger;
 
 namespace Modules.SoundManager
 {
-	public class AudioObject : MonoBehaviour
+	public class SoundObject : MonoBehaviour
 	{
 		private AudioClipData audioClipData;
 		private AudioSource audioSource;
@@ -18,7 +18,7 @@ namespace Modules.SoundManager
 
 		public void Initialize(AudioClipData clipData)
 		{
-			var sb = new StringBuilder("AudioObject [");
+			var sb = new StringBuilder("SoundObject [");
 			sb.Append(clipData.name);
 			sb.Append(']');
 
@@ -39,27 +39,38 @@ namespace Modules.SoundManager
 			audioSource.volume = clipData.volume;
 			audioSource.panStereo = clipData.panning;
 
-			switch (clipData.type)
+			switch (clipData.category)
 			{
-				case AudioClipType.BGM:
-				case AudioClipType.LoopableSFX:
+				case AudioClipCategory.BGM:
+				case AudioClipCategory.LoopableSFX:
 					audioSource.loop = true;
 					break;
-				case AudioClipType.OneShotSFX:
+				case AudioClipCategory.OneShotSFX:
 					audioSource.loop = false;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 			
+			Stop();
+
 			sb.Clear();
 		}
 
 		public void Play()
 		{
-			audioSource.Play();
+			if (!gameObject.activeSelf)
+			{
+				gameObject.SetActive(true);
 
-			fromPause = false;
+				audioSource.Play();
+
+				fromPause = false;
+			}
+			else
+			{
+				Logger.Log(LogPriority.Warning, $"{audioSource.gameObject.name}의 상태가 Stop이 아닙니다. Play는 Stop 후, 사용할 수 있습니다.");
+			}
 		}
 
 		public void Pause()
@@ -74,12 +85,22 @@ namespace Modules.SoundManager
 			if (fromPause)
 			{
 				audioSource.Play();
+				
+				fromPause = false;
+			}
+			else
+			{
+				Logger.Log(LogPriority.Warning, $"{audioSource.gameObject.name}의 상태가 Pause가 아닙니다. Resume은 Pause 후, 사용할 수 있습니다.");
 			}
 		}
 
 		public void Stop()
 		{
-			Destroy(gameObject);
+			audioSource.Stop();
+
+			fromPause = false;
+			
+			gameObject.SetActive(false);
 		}
 
 		public void FadeOut()
@@ -99,6 +120,16 @@ namespace Modules.SoundManager
 			audioSource.volume = 0.0f;
 
 			Observable.FromMicroCoroutine(FadeInCoroutine).Subscribe();
+		}
+
+		public void Mute()
+		{
+			audioSource.mute = true;
+		}
+
+		public void Unmute()
+		{
+			audioSource.mute = false;
 		}
 
 		private IEnumerator FadeOutCoroutine()

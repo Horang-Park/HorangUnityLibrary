@@ -1,3 +1,4 @@
+using Modules.SoundManager;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -36,9 +37,29 @@ public class Tester : MonoBehaviour
 			SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Single);
 		}
 		
-		if (Input.GetKeyDown(KeyCode.F5))
+		if (Input.GetKeyDown(KeyCode.F4))
 		{
 			SceneManager.Instance.LoadScene("0_SampleTestScene", LoadSceneMode.Single);
+		}
+
+		if (Input.GetKeyDown(KeyCode.F5))
+		{
+			SoundManager.Instance.Play("EG_LT_DE01 2");
+		}
+		
+		if (Input.GetKeyDown(KeyCode.F6))
+		{
+			SoundManager.Instance.Pause("EG_LT_DE01 2");
+		}
+		
+		if (Input.GetKeyDown(KeyCode.F7))
+		{
+			SoundManager.Instance.Resume("EG_LT_DE01 2");
+		}
+		
+		if (Input.GetKeyDown(KeyCode.F8))
+		{
+			SoundManager.Instance.Stop("EG_LT_DE01 2");
 		}
 	}
 

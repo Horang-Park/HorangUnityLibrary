@@ -2,17 +2,18 @@
 
 namespace Modules.SoundManager
 {
-	public enum AudioClipType
+	public enum AudioClipCategory
 	{
 		BGM,
 		LoopableSFX,
 		OneShotSFX,
+		QuestionSFX,
 	}
 		
 	[System.Serializable]
 	public struct AudioClipData
 	{
-		public AudioClipType type;
+		public AudioClipCategory category;
 		public AudioClip clip;
 		public int hashKey;
 		

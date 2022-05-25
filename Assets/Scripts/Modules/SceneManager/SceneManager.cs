@@ -19,7 +19,7 @@ namespace Modules.SceneManager
 
 		private Scene currentActiveScene;
 
-		public Scene CurrentActiveScene => currentActiveScene;
+		public ReactiveProperty<Scene> CurrentActiveScene;
 		public BoolReactiveProperty isLoadDone;
 		public BoolReactiveProperty isUnloadDone;
 
@@ -44,7 +44,12 @@ namespace Modules.SceneManager
 				return;
 			}
 
-			Observable.FromCoroutine(() => SceneLoad(loadSceneMode, sceneName)).Subscribe();
+			if (loadSceneMode == LoadSceneMode.Single)
+			{
+				sceneStack.Clear();
+			}
+
+			Observable.FromMicroCoroutine(() => SceneLoad(loadSceneMode, sceneName)).Subscribe();
 		}
 
 		/// <summary>
@@ -52,7 +57,7 @@ namespace Modules.SceneManager
 		/// </summary>
 		public void UnloadScene()
 		{
-			if (sceneStack.Count <= 1)
+			if (sceneStack.Count == 1)
 			{
 				Logger.Log(LogPriority.Error, "씬이 하나밖에 남지 않아 언로드를 할 수 없습니다.");
 

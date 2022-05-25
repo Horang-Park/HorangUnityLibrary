@@ -59,7 +59,7 @@ namespace Modules.SceneManager
 		{
 			if (sceneStack.Count == 1)
 			{
-				Logger.Log(LogPriority.Error, "씬이 하나밖에 남지 않아 언로드를 할 수 없습니다.");
+				Logger.Log(LogPriority.Error, "마지막 씬은 언로드 할 수 없습니다.");
 
 				return;
 			}

@@ -8,7 +8,5 @@ namespace Utilities
 		{
 			DontDestroyOnLoad(gameObject);
 		}
-
-		private void Start(){}
 	}
 }

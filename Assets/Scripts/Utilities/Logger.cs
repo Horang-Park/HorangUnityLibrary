@@ -72,26 +72,19 @@ namespace Utilities
 			switch (priority)
 			{
 				case LogPriority.Debug:
-					UnityEngine.Debug.Log(sb.ToString());
-					sb.Clear();
-					break;
 				case LogPriority.Verbose:
 					UnityEngine.Debug.Log(sb.ToString());
-					sb.Clear();
 					break;
 				case LogPriority.Warning:
 					UnityEngine.Debug.LogWarning(sb.ToString());
-					sb.Clear();
 					break;
 				case LogPriority.Error:
-					UnityEngine.Debug.LogError(sb.ToString());
-					sb.Clear();
-					break;
 				case LogPriority.Exception:
 					UnityEngine.Debug.LogError(sb.ToString());
-					sb.Clear();
 					break;
 			}
+			
+			sb.Clear();
 		}
 	}
 }

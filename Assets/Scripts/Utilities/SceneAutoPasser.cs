@@ -12,14 +12,17 @@ public class SceneAutoPasser : MonoBehaviour
 	private void Awake()
 	{
 		Observable.FromCoroutine(MoveToNextScene)
-			.DoOnCompleted(() => { Logger.Log(LogPriority.Verbose, $"{nextSceneName} 씬으로 이동합니다."); })
+			.DoOnCompleted(() =>
+			{
+				UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextSceneName);
+				
+				Logger.Log(LogPriority.Verbose, $"{nextSceneName} 씬으로 이동합니다.");
+			})
 			.Subscribe();
 	}
 
 	private IEnumerator MoveToNextScene()
 	{
 		yield return new WaitForSeconds(delayTime);
-
-		UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextSceneName);
 	}
 }

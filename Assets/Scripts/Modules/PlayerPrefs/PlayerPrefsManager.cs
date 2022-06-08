@@ -1,3 +1,4 @@
+using System.IO;
 using Utilities;
 using Logger = Utilities.Logger;
 
@@ -33,6 +34,8 @@ namespace Modules.PlayerPrefs
 				UnityEngine.PlayerPrefs.DeleteKey(encryptedKey);
 				
 				Logger.Log(LogPriority.Verbose, $"{key}이(가) 삭제되었습니다.");
+
+				return;
 			}
 			
 			Logger.Log(LogPriority.Warning, $"{key}이(가) 존재하지 않거나, 이미 삭제되었습니다.");

@@ -14,7 +14,7 @@ namespace Modules.PlayerPrefs
 			UnityEngine.PlayerPrefs.SetString(encryptedKey, encryptedValue);
 		}
 
-		public void SetInt(string key, int[] value)
+		public void SetInt(string key, IEnumerable<int> value)
 		{
 			var encryptedKey = Utilities.Encryption.Encrypt(key);
 			var encryptedValue = ArrayToEncryptedString(value);
@@ -30,7 +30,7 @@ namespace Modules.PlayerPrefs
 			UnityEngine.PlayerPrefs.SetString(encryptedKey, encryptedValue);
 		}
 		
-		public void SetFloat(string key, float[] value)
+		public void SetFloat(string key, IEnumerable<float> value)
 		{
 			var encryptedKey = Utilities.Encryption.Encrypt(key);
 			var encryptedValue = ArrayToEncryptedString(value);

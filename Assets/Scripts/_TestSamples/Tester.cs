@@ -1,3 +1,4 @@
+using _TestSamples;
 using Cysharp.Threading.Tasks;
 using Modules.SoundManager;
 using UniRx;
@@ -10,8 +11,11 @@ using SceneManager = Modules.SceneManager.SceneManager;
 
 public class Tester : MonoBehaviour
 {
+	private FSMTestFacade fsmTestFacade;
+	
 	private void Awake()
 	{
+		fsmTestFacade = GetComponent(typeof(FSMTestFacade)) as FSMTestFacade;
 	}
 
 	private void Start()
@@ -67,6 +71,11 @@ public class Tester : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.F8))
 		{
 			SoundManager.Instance.Stop("EG_LT_DE01 2");
+		}
+
+		if (Input.GetKeyDown(KeyCode.F12))
+		{
+			fsmTestFacade.ChangeState();
 		}
 	}
 

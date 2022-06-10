@@ -39,6 +39,8 @@ namespace Utilities
 		private const char OpenBracket = '[';
 		private const string CloseBracket = "] ";
 
+		private static bool isInternalLogCall;
+
 		/// <summary>
 		/// Log 띄우기
 		/// <br></br>
@@ -51,7 +53,7 @@ namespace Utilities
 		public static void Log(LogPriority priority, string message)
 		{
 			var st = new StackTrace(true);
-			var sf = st.GetFrame(1);
+			var sf = st.GetFrame(isInternalLogCall ? 2 : 1);
 			var fn = Path.GetFileNameWithoutExtension(sf.GetFileName()?.Split(PathSeparator, StringSplitOptions.RemoveEmptyEntries)[^1]);
 			var sb = new StringBuilder(FontBoldPrefix);
 			
@@ -85,6 +87,26 @@ namespace Utilities
 			}
 			
 			sb.Clear();
+
+			isInternalLogCall = false;
+		}
+
+		/// <summary>
+		/// Log 띄우기 [string을 바로 로그로 띄울 수 있는 기능]
+		/// <br></br>
+		/// StackTrace를 이용하므로 Update, FixedUpdate 혹은 지속적으로 반복되는 Coroutine에서는 성능 저하가 발생할 수 있다.
+		/// <br></br>
+		/// 테스트 혹은 디버깅 용도로 사용하고 위와 같은 메서드에서는 제거해주어야 한다.
+		/// /// </summary>
+		/// <param name="message"></param>
+		/// <param name="logPriority"></param>
+		public static string Log(this string message, LogPriority logPriority)
+		{
+			isInternalLogCall = true;
+			
+			Log(logPriority, message);
+
+			return message;
 		}
 	}
 }

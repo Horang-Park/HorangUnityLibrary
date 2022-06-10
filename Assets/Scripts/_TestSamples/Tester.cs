@@ -23,9 +23,11 @@ public class Tester : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.F1))
 		{
-			SceneManager.Instance.LoadScene("1_LoadTestScene 1", LoadSceneMode.Additive);
+			SceneManager.Instance.LoadScene("1_LoadTestScene 1".Log(LogPriority.Exception), LoadSceneMode.Additive);
 			SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Additive);
 			SceneManager.Instance.LoadScene("3_LoadTestScene 3", LoadSceneMode.Additive);
+			
+			"f1 누름".Log(LogPriority.Debug);
 		}
 
 		if (Input.GetKeyDown(KeyCode.F2))

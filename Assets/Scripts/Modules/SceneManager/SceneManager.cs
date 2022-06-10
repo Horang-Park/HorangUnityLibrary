@@ -107,6 +107,12 @@ namespace Modules.SceneManager
 			var scene = UnityEngine.SceneManagement.SceneManager.GetSceneByName(sceneName);
 
 			isLoadDone.Value = true;
+			
+			UnityEngine.SceneManagement.SceneManager.SetActiveScene(scene);
+
+			currentActiveScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+
+			sceneStack.Push(scene);
 
 			isLoadDone.Value = false;
 		}

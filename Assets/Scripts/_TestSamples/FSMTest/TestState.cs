@@ -7,7 +7,7 @@ namespace _TestSamples
 {
 	public class TestState : State
 	{
-		public static IntReactiveProperty a = new ();
+		public static readonly IntReactiveProperty a = new ();
 		
 		public override void Enter()
 		{
@@ -17,6 +17,11 @@ namespace _TestSamples
 		public override void LogicUpdate()
 		{
 			a.Value += 1;
+		}
+		
+		public override void BeforeExit()
+		{
+			a.Value = 0;
 		}
 
 		public override void Exit()
@@ -30,11 +35,6 @@ namespace _TestSamples
 		public override void Enter()
 		{
 			StateName = "ChangedState";
-		}
-
-		public override void LogicUpdate()
-		{
-			TestState.a.Value -= 1;
 		}
 
 		public override void Exit()

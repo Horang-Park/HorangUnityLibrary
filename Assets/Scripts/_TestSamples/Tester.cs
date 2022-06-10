@@ -1,11 +1,9 @@
 using _TestSamples;
-using Cysharp.Threading.Tasks;
 using Modules.SoundManager;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utilities;
-using Utilities.UnityExtensions;
 using Logger = Utilities.Logger;
 using SceneManager = Modules.SceneManager.SceneManager;
 
@@ -22,9 +20,6 @@ public class Tester : MonoBehaviour
 	{
 		SceneManager.Instance.isLoadDone.Subscribe(OnLoadDone);
 		SceneManager.Instance.isUnloadDone.Subscribe(OnUnloadDone);
-		
-		transform.position = transform.position.InstantAddX(1.0f);
-		transform.position = transform.position.InstantMultiplyX(2.0f);
 	}
 
 	private void Update()

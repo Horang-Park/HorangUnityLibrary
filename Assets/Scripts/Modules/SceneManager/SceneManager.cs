@@ -97,8 +97,6 @@ namespace Modules.SceneManager
 
 		private IEnumerator SceneLoad(LoadSceneMode loadSceneMode, string sceneName)
 		{
-			Logger.Log(LogPriority.Debug, $"{sceneName} 씬 로드 시작");
-
 			var ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
 
 			while (ao.isDone is false)
@@ -110,24 +108,11 @@ namespace Modules.SceneManager
 
 			isLoadDone.Value = true;
 
-			if (scene.name.Equals("Modules") is false)
-			{
-				UnityEngine.SceneManagement.SceneManager.SetActiveScene(scene);
-
-				currentActiveScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-
-				sceneStack.Push(scene);
-			}
-
-			Logger.Log(LogPriority.Debug, $"{scene.name} 씬 로드 끝");
-
 			isLoadDone.Value = false;
 		}
 
 		private IEnumerator SceneUnload(Scene scene)
 		{
-			Logger.Log(LogPriority.Debug, $"{scene.name} 씬 언로드 시작");
-
 			var ao = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(scene);
 
 			while (ao.isDone is false)
@@ -145,8 +130,6 @@ namespace Modules.SceneManager
 			}
 
 			isUnloadDone.Value = true;
-
-			Logger.Log(LogPriority.Debug, $"{scene.name} 씬 언로드 끝");
 
 			isUnloadDone.Value = false;
 		}

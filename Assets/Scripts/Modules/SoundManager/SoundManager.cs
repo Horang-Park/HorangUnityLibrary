@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Structural;
 using UnityEngine;
 using Utilities;
@@ -163,6 +164,11 @@ namespace Modules.SoundManager
 			{
 				soundObjectsByCategory.Add((AudioClipCategory)type, new List<SoundObject>());
 			}
+		}
+
+		private bool IsExistAudioClipInList(int key)
+		{
+			return currentAddedAudioClip.Any(audioClip => audioClip.hashKey.Equals(key));
 		}
 		
 		private bool IsExistAudioClipKey(int key)

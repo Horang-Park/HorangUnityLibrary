@@ -167,6 +167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed97e78cfec441f7b8e86994b77aef86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentActiveScene:
+    value:
+      m_Handle: 0
   isLoadDone:
     value: 0
   isUnloadDone:
@@ -425,25 +428,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentAddedAudioClip:
-  - type: 0
+  - category: 0
     clip: {fileID: 8300000, guid: 86a8a873ba41bf341a21a60c30ce1e5a, type: 3}
     hashKey: -221577896
     name: EG_LT_DE01
     volume: 1
     panning: 0
-  - type: 0
+  - category: 0
     clip: {fileID: 8300000, guid: 3e0f365202a527243910b685f4efd0e3, type: 3}
     hashKey: 706565837
     name: EG_LT_DE01 3
     volume: 1
     panning: 0
-  - type: 0
+  - category: 0
     clip: {fileID: 8300000, guid: 537de1b23511a8b4d89ebec9f5487ba7, type: 3}
     hashKey: -2022317518
     name: EG_LT_DE01 2
     volume: 1
     panning: 0
-  - type: 0
+  - category: 0
     clip: {fileID: 8300000, guid: 2b3cc68056c3ed549ad47e0b61a6483d, type: 3}
     hashKey: 1869365251
     name: EG_LT_DE01 1
@@ -475,6 +478,7 @@ GameObject:
   - component: {fileID: 1730436814}
   - component: {fileID: 1730436813}
   - component: {fileID: 1730436815}
+  - component: {fileID: 1730436816}
   m_Layer: 0
   m_Name: Tester
   m_TagString: Untagged
@@ -521,3 +525,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a267f7b125b4a044b5f0a6f5684993e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1730436816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730436812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a501101d2dd0444ca9b58c6587e3652b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  a: 0

@@ -9,7 +9,7 @@ namespace Modules.SoundManager
 	{
 		public static void AddAudioClip(AudioClipData audioClipData)
 		{
-			if (Instance.IsExistAudioClipKey(audioClipData.hashKey) is true)
+			if (Instance.IsExistAudioClipInList(audioClipData.hashKey))
 			{
 				Logger.Log(LogPriority.Warning, $"{audioClipData.name} 오디오 클립은 이미 등록되어 있습니다.");
 				
@@ -25,7 +25,7 @@ namespace Modules.SoundManager
 
 		public static bool RemoveSpecificAudioClip(int key)
 		{
-			if (Instance.IsExistAudioClipKey(key) is false)
+			if (Instance.IsExistAudioClipInList(key) is false)
 			{
 				Logger.Log(LogPriority.Error, $"오디오 클립이 없어 삭제할 수 없습니다. 인스펙터를 확인해주세요. / Code: {key}");
 
@@ -34,12 +34,6 @@ namespace Modules.SoundManager
 
 			var removableData = Instance.currentAddedAudioClip.Find(match => match.hashKey.Equals(key));
 			Instance.currentAddedAudioClip.Remove(removableData);
-			
-			Logger.Log(LogPriority.Debug, "currentAddedAudioClip(List)에서 삭제 완료");
-
-			Instance.audioClipDatas.Remove(key);
-			
-			Logger.Log(LogPriority.Debug, "audioClipDatas(Dictionary)에서 삭제 완료");
 
 			return true;
 		}

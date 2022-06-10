@@ -20,7 +20,7 @@ namespace Utilities
 		{
 #if UNITY_ANDROID
 			return Permission.HasUserAuthorizedPermission(Permission.Microphone);
-#elif UNITY_IPHONE
+#elif UNITY_IOS
 			return Application.HasUserAuthorization(UserAuthorization.Microphone);
 #else
 			return Application.HasUserAuthorization(UserAuthorization.Microphone);
@@ -45,7 +45,7 @@ namespace Utilities
 #if UNITY_ANDROID
 			Permission.RequestUserPermission(Permission.Microphone);
 			yield return null;
-#elif UNITY_IPHONE
+#elif UNITY_IOS
 			yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);
 #else
 			yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);

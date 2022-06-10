@@ -8,7 +8,7 @@ namespace Utilities
 	public static class Encryption
 	{
 		private static readonly string DeviceIdentifier = SystemInfo.deviceUniqueIdentifier.Replace("-", string.Empty);
-		private static readonly RijndaelManaged RijndaelManaged = CreateRijndaelManaged();
+		private static readonly RijndaelManaged Rijndael = CreateRijndaelManaged();
 		
 		/// <summary>
 		/// 암호화
@@ -18,7 +18,7 @@ namespace Utilities
 		public static string Encrypt(string toEncrypt)
 		{
 			var toEncryptArray = Encoding.UTF8.GetBytes(toEncrypt);
-			var cTransform = RijndaelManaged.CreateEncryptor();
+			var cTransform = Rijndael.CreateEncryptor();
 			var resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
 
 			return Convert.ToBase64String(resultArray, 0, resultArray.Length);
@@ -32,7 +32,7 @@ namespace Utilities
 		public static string Decrypt(string toDecrypt)
 		{
 			var toDecryptArray = Convert.FromBase64String(toDecrypt);
-			var cTransform = RijndaelManaged.CreateDecryptor();
+			var cTransform = Rijndael.CreateDecryptor();
 			var resultArray = cTransform.TransformFinalBlock(toDecryptArray, 0, toDecryptArray.Length);
 			
 			return Encoding.UTF8.GetString(resultArray);

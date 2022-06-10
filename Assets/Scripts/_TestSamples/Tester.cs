@@ -4,6 +4,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utilities;
+using Utilities.UnityExtensions;
 using Logger = Utilities.Logger;
 using SceneManager = Modules.SceneManager.SceneManager;
 
@@ -21,9 +22,11 @@ public class Tester : MonoBehaviour
 
 	private void Update()
 	{
+		transform.position = transform.position.InstantAddX(1.0f * Time.deltaTime);
+		
 		if (Input.GetKeyDown(KeyCode.F1))
 		{
-			SceneManager.Instance.LoadScene("1_LoadTestScene 1".Log(LogPriority.Exception), LoadSceneMode.Additive);
+			SceneManager.Instance.LoadScene("1_LoadTestScene 1".Log(LogPriority.Exception).Log(LogPriority.Error), LoadSceneMode.Additive);
 			SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Additive);
 			SceneManager.Instance.LoadScene("3_LoadTestScene 3", LoadSceneMode.Additive);
 			

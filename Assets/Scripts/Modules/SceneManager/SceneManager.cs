@@ -125,6 +125,8 @@ namespace Modules.SceneManager
 			{
 				yield return null;
 			}
+			
+			isUnloadDone.Value = true;
 
 			var lastScene = sceneStack.First();
 			
@@ -134,8 +136,6 @@ namespace Modules.SceneManager
 
 				currentActiveScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
 			}
-
-			isUnloadDone.Value = true;
 
 			isUnloadDone.Value = false;
 		}

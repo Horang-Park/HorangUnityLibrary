@@ -18,12 +18,13 @@ public class Tester : MonoBehaviour
 	{
 		SceneManager.Instance.isLoadDone.Subscribe(OnLoadDone);
 		SceneManager.Instance.isUnloadDone.Subscribe(OnUnloadDone);
+		
+		transform.position = transform.position.InstantAddX(1.0f);
+		transform.position = transform.position.InstantMultiplyX(2.0f);
 	}
 
 	private void Update()
 	{
-		transform.position = transform.position.InstantAddX(1.0f * Time.deltaTime);
-		
 		if (Input.GetKeyDown(KeyCode.F1))
 		{
 			SceneManager.Instance.LoadScene("1_LoadTestScene 1".Log(LogPriority.Exception).Log(LogPriority.Error), LoadSceneMode.Additive);

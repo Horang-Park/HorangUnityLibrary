@@ -1,4 +1,5 @@
 using _TestSamples;
+using Modules.InputManager;
 using Modules.SoundManager;
 using UniRx;
 using UnityEngine;
@@ -20,18 +21,41 @@ public class Tester : MonoBehaviour
 	{
 		SceneManager.Instance.isLoadDone.Subscribe(OnLoadDone);
 		SceneManager.Instance.isUnloadDone.Subscribe(OnUnloadDone);
+		
+		InputManager.Instance.AddMouseInput(this, () =>
+		{
+			if (Input.GetKeyDown(KeyCode.F1))
+			{
+				SceneManager.Instance.LoadScene("1_LoadTestScene 1".Log(LogPriority.Exception).Log(LogPriority.Error), LoadSceneMode.Additive);
+				SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Additive);
+				SceneManager.Instance.LoadScene("3_LoadTestScene 3", LoadSceneMode.Additive);
+			
+				"f1 누름".Log(LogPriority.Debug);
+			}
+		});
+		
+		InputManager.Instance.AddMouseInput(this, null);
+		InputManager.Instance.AddMouseInput(null, () => {});
+		
+		InputManager.Instance.AddKeyboardInput(this, () =>
+		{
+			if (Input.GetMouseButtonDown(0))
+			{
+				"마우스 좌클릭".Log(LogPriority.Debug);
+			}
+		});
 	}
 
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.F1))
-		{
-			SceneManager.Instance.LoadScene("1_LoadTestScene 1".Log(LogPriority.Exception).Log(LogPriority.Error), LoadSceneMode.Additive);
-			SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Additive);
-			SceneManager.Instance.LoadScene("3_LoadTestScene 3", LoadSceneMode.Additive);
-			
-			"f1 누름".Log(LogPriority.Debug);
-		}
+		// if (Input.GetKeyDown(KeyCode.F1))
+		// {
+		// 	SceneManager.Instance.LoadScene("1_LoadTestScene 1".Log(LogPriority.Exception).Log(LogPriority.Error), LoadSceneMode.Additive);
+		// 	SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Additive);
+		// 	SceneManager.Instance.LoadScene("3_LoadTestScene 3", LoadSceneMode.Additive);
+		// 	
+		// 	"f1 누름".Log(LogPriority.Debug);
+		// }
 
 		if (Input.GetKeyDown(KeyCode.F2))
 		{

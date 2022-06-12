@@ -42,4 +42,15 @@ namespace _TestSamples
 			$"{StateName} Exit".Log(LogPriority.Debug);
 		}
 	}
+
+	public class IdleState : State
+	{
+		public override void Enter()
+		{
+		}
+
+		public override void Exit()
+		{
+		}
+	}
 }

@@ -11,6 +11,8 @@ namespace _TestSamples
 		
 		private TestState testState;
 		private ChangedState changedState;
+		private IdleState idleState;
+		
 		private StateMachine stateMachine;
 
 		private bool b;
@@ -19,6 +21,8 @@ namespace _TestSamples
 		{
 			testState = new TestState();
 			changedState = new ChangedState();
+			idleState = new IdleState();
+			
 			stateMachine = gameObject.AddComponent<StateMachine>();
 
 			TestState.a.Subscribe(i => { a = i; });

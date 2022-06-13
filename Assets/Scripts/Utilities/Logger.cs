@@ -39,7 +39,7 @@ namespace Utilities
 		private const char OpenBracket = '[';
 		private const string CloseBracket = "] ";
 
-		private static bool isInternalLogCall;
+		private static bool _isInternalLogCall;
 
 		/// <summary>
 		/// Log 띄우기
@@ -53,7 +53,7 @@ namespace Utilities
 		public static void Log(LogPriority priority, string message)
 		{
 			var st = new StackTrace(true);
-			var sf = st.GetFrame(isInternalLogCall ? 2 : 1);
+			var sf = st.GetFrame(_isInternalLogCall ? 2 : 1);
 			var fn = Path.GetFileNameWithoutExtension(sf.GetFileName()?.Split(PathSeparator, StringSplitOptions.RemoveEmptyEntries)[^1]);
 			var sb = new StringBuilder(FontBoldPrefix);
 			
@@ -88,7 +88,7 @@ namespace Utilities
 			
 			sb.Clear();
 
-			isInternalLogCall = false;
+			_isInternalLogCall = false;
 		}
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace Utilities
 		/// <param name="logPriority"></param>
 		public static string Log(this string message, LogPriority logPriority)
 		{
-			isInternalLogCall = true;
+			_isInternalLogCall = true;
 			
 			Log(logPriority, message);
 

@@ -16,7 +16,11 @@ namespace Modules.SoundManager
 
 		private readonly Dictionary<int, AudioClipData> audioClipDatas = new();
 		private readonly Dictionary<int, SoundObject> soundObjects = new();
+		private readonly Dictionary<int, IDisposable> disposables = new();
 		private readonly Dictionary<AudioClipCategory, List<SoundObject>> soundObjectsByCategory = new();
+
+		[HideInInspector] public float fadeInSpeedMultiplier;
+		[HideInInspector] public float fadeOutSpeedMultiplier;
 
 		#region 기본 사용 인터페이스
 
@@ -26,8 +30,7 @@ namespace Modules.SoundManager
 		/// <param name="audioClipName">재생할 오디오 클립 이름</param>
 		/// <param name="getPlayTime">현재 오디오 재생 시간 갖고오는 콜백 함수</param>
 		/// <param name="useFadeIn">페이드 인 사용 여부</param>
-		/// <returns>Disposable로써, 반환된 값을 이용하여 Subscription을 취소 (Stop 호출 후 Dispose)</returns>
-		public IDisposable Play(string audioClipName, Action<float> getPlayTime = null, bool useFadeIn = false)
+		public void Play(string audioClipName, Action<float> getPlayTime = null, bool useFadeIn = false)
 		{
 			var hashKey = audioClipName.GetHashCode();
 			
@@ -37,7 +40,7 @@ namespace Modules.SoundManager
 			{
 				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오 클립을 찾을 수 없습니다. 인스펙터 혹은 작성한 코드를 확인해주세요.");
 
-				return null;
+				return;
 			}
 			
 			var clipData = audioClipDatas[hashKey];
@@ -53,19 +56,27 @@ namespace Modules.SoundManager
 				soundObject = soundObjects[hashKey];
 			}
 			
-			var disposable = soundObject.CurrentPlayTime
-				.Subscribe(t => getPlayTime?.Invoke(t));
+			if (getPlayTime is not null)
+			{
+				var disposable = soundObject.CurrentPlayTime
+					.Subscribe(getPlayTime.Invoke);
+
+				if (IsExistDisposable(hashKey))
+				{
+					disposables.Remove(hashKey);
+				}
+				
+				disposables.Add(hashKey, disposable);
+			}
 			
 			if (useFadeIn)
 			{
-				soundObject.FadeIn();
+				soundObject.FadeIn(fadeInSpeedMultiplier);
 			}
 			else
 			{
 				soundObject.Play();
 			}
-
-			return disposable;
 		}
 
 		/// <summary>
@@ -122,12 +133,19 @@ namespace Modules.SoundManager
 
 			if (useFadeOut)
 			{
-				soundObject.FadeOut();
+				soundObject.FadeOut(fadeOutSpeedMultiplier);
 			}
 			else
 			{
 				soundObject.Stop();
 			}
+
+			if (TryGetDisposable(hashKey, out var disposable) is false)
+			{
+				return;
+			}
+			
+			disposable.Dispose();
 		}
 		
 		#endregion
@@ -216,6 +234,11 @@ namespace Modules.SoundManager
 			return soundObjects.ContainsKey(key);
 		}
 
+		private bool IsExistDisposable(int key)
+		{
+			return disposables.ContainsKey(key);
+		}
+
 		private bool TryGetAudioObject(int key, out SoundObject soundObject)
 		{
 			if (IsExistSoundObjectKey(key) is false)
@@ -228,6 +251,20 @@ namespace Modules.SoundManager
 			}
 
 			soundObject = soundObjects[key];
+
+			return true;
+		}
+
+		private bool TryGetDisposable(int key, out IDisposable disposable)
+		{
+			if (IsExistDisposable(key) is false)
+			{
+				disposable = null;
+				
+				return false;
+			}
+
+			disposable = disposables[key];
 
 			return true;
 		}

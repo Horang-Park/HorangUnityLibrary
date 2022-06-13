@@ -16,6 +16,9 @@ namespace Modules.SoundManager
 		private float targetVolume;
 		private bool fromPause;
 
+		private IDisposable fadeOutDisposable;
+		private IDisposable fadeInDisposable;
+
 		public readonly Subject<float> CurrentPlayTime = new();
 
 		public void Initialize(AudioClipData clipData)
@@ -106,27 +109,64 @@ namespace Modules.SoundManager
 			audioSource.Stop();
 
 			fromPause = false;
-			
+
 			gameObject.SetActive(false);
 		}
 
-		public void FadeOut()
+		public void FadeOut(float speedMultiplier)
 		{
+			if (speedMultiplier <= 0.0f)
+			{
+				Logger.Log(LogPriority.Exception, "페이드 아웃의 속도 계수는 0 이하가 될 수 없습니다.");
+
+				throw new ArgumentException();
+			}
+			
 			if (!audioSource.isPlaying)
 			{
 				Logger.Log(LogPriority.Warning, $"{gameObject.name} 오디오가 재생중이지 않아 페이드 아웃을 적용할 수 없습니다.");
 
 				return;
 			}
+			
+			if (fadeOutDisposable is not null)
+			{
+				fadeOutDisposable.Dispose();
 
-			Observable.FromMicroCoroutine(FadeOutCoroutine).Subscribe();
+				fadeOutDisposable = null;
+			}
+
+			fadeOutDisposable = Observable.FromMicroCoroutine(() => FadeOutCoroutine(speedMultiplier)).Subscribe();
 		}
 
-		public void FadeIn()
+		public void FadeIn(float speedMultiplier)
 		{
-			audioSource.volume = 0.0f;
+			if (speedMultiplier <= 0.0f)
+			{
+				Logger.Log(LogPriority.Exception, "페이드 인의 속도 계수는 0 이하가 될 수 없습니다.");
 
-			Observable.FromMicroCoroutine(FadeInCoroutine).Subscribe();
+				throw new ArgumentException();
+			}
+
+			if (fadeInDisposable is not null)
+			{
+				fadeInDisposable.Dispose();
+
+				fadeInDisposable = null;
+				
+				gameObject.SetActive(false);
+			}
+			
+			if (!gameObject.activeSelf)
+			{
+				audioSource.volume = 0.0f;
+
+				fadeInDisposable = Observable.FromMicroCoroutine(() => FadeInCoroutine(speedMultiplier)).Subscribe();
+			}
+			else
+			{
+				Logger.Log(LogPriority.Warning, $"{audioSource.gameObject.name}의 상태가 Stop이 아닙니다. Play는 Stop 후, 사용할 수 있습니다.");
+			}
 		}
 
 		public void Mute()
@@ -139,11 +179,17 @@ namespace Modules.SoundManager
 			audioSource.mute = false;
 		}
 
-		private IEnumerator FadeOutCoroutine()
+		private IEnumerator FadeOutCoroutine(float speedMultiplier)
 		{
+			if (fadeInDisposable is not null)
+			{
+				fadeInDisposable.Dispose();
+				fadeInDisposable = null;
+			}
+			
 			while (audioSource.volume > 0.0f)
 			{
-				audioSource.volume -= Time.deltaTime;
+				audioSource.volume -= Time.deltaTime * speedMultiplier;
 				
 				yield return null;
 			}
@@ -151,13 +197,19 @@ namespace Modules.SoundManager
 			Stop();
 		}
 
-		private IEnumerator FadeInCoroutine()
+		private IEnumerator FadeInCoroutine(float speedMultiplier)
 		{
+			if (fadeOutDisposable is not null)
+			{
+				fadeOutDisposable.Dispose();
+				fadeOutDisposable = null;
+			}
+			
 			Play();
 			
 			while (audioSource.volume < targetVolume)
 			{
-				audioSource.volume += Time.deltaTime;
+				audioSource.volume += Time.deltaTime * speedMultiplier;
 				
 				yield return null;
 			}

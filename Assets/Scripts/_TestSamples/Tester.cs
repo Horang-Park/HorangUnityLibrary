@@ -44,8 +44,6 @@ public class Tester : MonoBehaviour
 		});
 	}
 
-	private IDisposable d1;
-
 	private void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.F2))
@@ -65,10 +63,13 @@ public class Tester : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.F5))
 		{
-			d1 = SoundManager.Instance.Play("EG_LT_DE01 2", f =>
-			{
-				Logger.Log(LogPriority.Debug, $"Tester:Update -> {f}");
-			});
+			// SoundManager.Instance.Play("EG_LT_DE01 2", f =>
+			// {
+			// 	Logger.Log(LogPriority.Debug, $"Tester:Update -> {f}");
+			// });
+
+			SoundManager.Instance.fadeInSpeedMultiplier = 0.1f;
+			SoundManager.Instance.Play("EG_LT_DE01 2");
 		}
 		
 		if (Input.GetKeyDown(KeyCode.F6))
@@ -83,9 +84,8 @@ public class Tester : MonoBehaviour
 		
 		if (Input.GetKeyDown(KeyCode.F8))
 		{
+			SoundManager.Instance.fadeOutSpeedMultiplier = 0.1f;
 			SoundManager.Instance.Stop("EG_LT_DE01 2");
-			
-			d1.Dispose();
 		}
 
 		if (Input.GetKeyDown(KeyCode.F12))

@@ -39,7 +39,7 @@ namespace Modules.InputManager
 			Logger.Log(LogPriority.Verbose, $"마우스 입력 액션이 등록되었습니다. / methodName: {action.Method.Name}, from: {sender.GetType().Name}");
 		}
 		
-		public void AddKeyboardInput(object sender, [NotNull] Action action)
+		public void AddKeyboardInput(object sender, Action action)
 		{
 			if (sender is null)
 			{

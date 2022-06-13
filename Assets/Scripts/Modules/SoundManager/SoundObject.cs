@@ -48,6 +48,7 @@ namespace Modules.SoundManager
 					audioSource.loop = true;
 					break;
 				case AudioClipCategory.OneShotSFX:
+				case AudioClipCategory.QuestionSFX:
 					audioSource.loop = false;
 					break;
 				default:
@@ -73,9 +74,10 @@ namespace Modules.SoundManager
 			{
 				Logger.Log(LogPriority.Warning, $"{audioSource.gameObject.name}의 상태가 Stop이 아닙니다. Play는 Stop 후, 사용할 수 있습니다.");
 			}
-			
+
 			Observable.FromCoroutine<float>(PlayTimeUpdater)
-				.Subscribe(t => CurrentPlayTime.OnNext(t));
+				.Subscribe(t => CurrentPlayTime.OnNext(t))
+				.AddTo(gameObject);
 		}
 
 		public void Pause()

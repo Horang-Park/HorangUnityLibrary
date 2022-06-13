@@ -158,6 +158,11 @@ namespace Modules.SoundManager
 			}
 		}
 
+		/// <summary>
+		/// 오디오 길이 반환
+		/// </summary>
+		/// <param name="audioClipName">알고 싶은 오디오 클립 이름</param>
+		/// <returns>오디오 클립의 길이</returns>
 		public float GetAudioLength(string audioClipName)
 		{
 			var hashKey = audioClipName.GetHashCode();

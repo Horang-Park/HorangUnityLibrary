@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Structural;
+using UniRx;
 using UnityEngine;
 using Utilities;
 using Logger = Utilities.Logger;
@@ -17,26 +18,29 @@ namespace Modules.SoundManager
 		private readonly Dictionary<int, SoundObject> soundObjects = new();
 		private readonly Dictionary<AudioClipCategory, List<SoundObject>> soundObjectsByCategory = new();
 
+		#region 기본 사용 인터페이스
+
 		/// <summary>
 		/// 오디오 재생
 		/// </summary>
 		/// <param name="audioClipName">재생할 오디오 클립 이름</param>
+		/// <param name="getPlayTime">현재 오디오 재생 시간 갖고오는 콜백 함수</param>
 		/// <param name="useFadeIn">페이드 인 사용 여부</param>
-		public void Play(string audioClipName, bool useFadeIn = false)
+		/// <returns>Disposable로써, 반환된 값을 이용하여 Subscription을 취소 (Stop 호출 후 Dispose)</returns>
+		public IDisposable Play(string audioClipName, Action<float> getPlayTime = null, bool useFadeIn = false)
 		{
 			var hashKey = audioClipName.GetHashCode();
 			
 			SoundObject soundObject;
-			AudioClipData clipData;
 
 			if (IsExistAudioClipKey(hashKey) is false)
 			{
 				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오 클립을 찾을 수 없습니다. 인스펙터 혹은 작성한 코드를 확인해주세요.");
 
-				return;
+				return null;
 			}
 			
-			clipData = audioClipDatas[hashKey];
+			var clipData = audioClipDatas[hashKey];
 			
 			if (IsExistSoundObjectKey(hashKey) is false)
 			{
@@ -49,6 +53,9 @@ namespace Modules.SoundManager
 				soundObject = soundObjects[hashKey];
 			}
 			
+			var disposable = soundObject.CurrentPlayTime
+				.Subscribe(t => getPlayTime?.Invoke(t));
+			
 			if (useFadeIn)
 			{
 				soundObject.FadeIn();
@@ -57,6 +64,8 @@ namespace Modules.SoundManager
 			{
 				soundObject.Play();
 			}
+
+			return disposable;
 		}
 
 		/// <summary>
@@ -66,9 +75,8 @@ namespace Modules.SoundManager
 		public void Pause(string audioClipName)
 		{
 			var hashKey = audioClipName.GetHashCode();
-			SoundObject soundObject;
 
-			if (TryGetAudioObject(hashKey, out soundObject) is false)
+			if (TryGetAudioObject(hashKey, out var soundObject) is false)
 			{
 				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오를 일시정지 할 수 없습니다.");
 
@@ -85,9 +93,8 @@ namespace Modules.SoundManager
 		public void Resume(string audioClipName)
 		{
 			var hashKey = audioClipName.GetHashCode();
-			SoundObject soundObject;
 
-			if (TryGetAudioObject(hashKey, out soundObject) is false)
+			if (TryGetAudioObject(hashKey, out var soundObject) is false)
 			{
 				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오 재생을 재개 할 수 없습니다.");
 
@@ -105,9 +112,8 @@ namespace Modules.SoundManager
 		public void Stop(string audioClipName, bool useFadeOut = false)
 		{
 			var hashKey = audioClipName.GetHashCode();
-			SoundObject soundObject;
 
-			if (TryGetAudioObject(hashKey, out soundObject) is false)
+			if (TryGetAudioObject(hashKey, out var soundObject) is false)
 			{
 				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오를 정지 할 수 없습니다.");
 
@@ -123,6 +129,10 @@ namespace Modules.SoundManager
 				soundObject.Stop();
 			}
 		}
+		
+		#endregion
+
+		#region 부가 인터페이스
 
 		/// <summary>
 		/// 카테고리에 해당하는 사운드 오브젝트 음소거
@@ -147,7 +157,27 @@ namespace Modules.SoundManager
 				soundObject.Unmute();
 			}
 		}
+
+		public float GetAudioLength(string audioClipName)
+		{
+			var hashKey = audioClipName.GetHashCode();
+
+			if (IsExistAudioClipKey(hashKey) is false)
+			{
+				Logger.Log(LogPriority.Error, $"{audioClipName} 오디오 클립을 찾을 수 없습니다. 인스펙터 혹은 작성한 코드를 확인해주세요.");
+
+				return -1.0f;
+			}
+			
+			var clipData = audioClipDatas[hashKey];
+
+			return clipData.clip.length;
+		}
 		
+		#endregion
+
+		#region 내부 사용 메서드
+
 		protected override void Awake()
 		{
 			base.Awake();
@@ -216,6 +246,8 @@ namespace Modules.SoundManager
 
 			return co;
 		}
+		
+		#endregion
 	}
 }
 

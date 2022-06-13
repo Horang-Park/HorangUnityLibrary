@@ -16,6 +16,8 @@ namespace Modules.SoundManager
 		private float targetVolume;
 		private bool fromPause;
 
+		public readonly Subject<float> CurrentPlayTime = new();
+
 		public void Initialize(AudioClipData clipData)
 		{
 			var sb = new StringBuilder("SoundObject [");
@@ -71,6 +73,9 @@ namespace Modules.SoundManager
 			{
 				Logger.Log(LogPriority.Warning, $"{audioSource.gameObject.name}의 상태가 Stop이 아닙니다. Play는 Stop 후, 사용할 수 있습니다.");
 			}
+			
+			Observable.FromCoroutine<float>(PlayTimeUpdater)
+				.Subscribe(t => CurrentPlayTime.OnNext(t));
 		}
 
 		public void Pause()
@@ -152,6 +157,24 @@ namespace Modules.SoundManager
 			{
 				audioSource.volume += Time.deltaTime;
 				
+				yield return null;
+			}
+		}
+
+		private IEnumerator PlayTimeUpdater(IObserver<float> observer)
+		{
+			while (true)
+			{
+				if (!audioSource.isPlaying)
+				{
+					yield return null;
+
+					continue;
+				}
+
+				//CurrentPlayTime.OnNext(audioSource.time);
+				observer.OnNext(audioSource.time);
+
 				yield return null;
 			}
 		}

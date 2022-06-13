@@ -1,3 +1,4 @@
+using System;
 using _TestSamples;
 using Modules.InputManager;
 using Modules.SoundManager;
@@ -34,9 +35,6 @@ public class Tester : MonoBehaviour
 			}
 		});
 		
-		InputManager.Instance.AddMouseInput(this, null);
-		InputManager.Instance.AddMouseInput(null, () => {});
-		
 		InputManager.Instance.AddKeyboardInput(this, () =>
 		{
 			if (Input.GetMouseButtonDown(0))
@@ -46,17 +44,10 @@ public class Tester : MonoBehaviour
 		});
 	}
 
+	private IDisposable d1;
+
 	private void Update()
 	{
-		// if (Input.GetKeyDown(KeyCode.F1))
-		// {
-		// 	SceneManager.Instance.LoadScene("1_LoadTestScene 1".Log(LogPriority.Exception).Log(LogPriority.Error), LoadSceneMode.Additive);
-		// 	SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Additive);
-		// 	SceneManager.Instance.LoadScene("3_LoadTestScene 3", LoadSceneMode.Additive);
-		// 	
-		// 	"f1 누름".Log(LogPriority.Debug);
-		// }
-
 		if (Input.GetKeyDown(KeyCode.F2))
 		{
 			SceneManager.Instance.UnloadScene();
@@ -74,7 +65,10 @@ public class Tester : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.F5))
 		{
-			SoundManager.Instance.Play("EG_LT_DE01 2");
+			d1 = SoundManager.Instance.Play("EG_LT_DE01 2", f =>
+			{
+				Logger.Log(LogPriority.Debug, $"Tester:Update -> {f}");
+			});
 		}
 		
 		if (Input.GetKeyDown(KeyCode.F6))
@@ -90,6 +84,8 @@ public class Tester : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.F8))
 		{
 			SoundManager.Instance.Stop("EG_LT_DE01 2");
+			
+			d1.Dispose();
 		}
 
 		if (Input.GetKeyDown(KeyCode.F12))

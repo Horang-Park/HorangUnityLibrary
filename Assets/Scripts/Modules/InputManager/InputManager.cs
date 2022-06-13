@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Structural;
 using UniRx;
 using UnityEngine;
@@ -10,52 +9,91 @@ using Logger = Utilities.Logger;
 
 namespace Modules.InputManager
 {
+	public enum InputActionType
+	{
+		Down,
+		Up,
+		Press,
+	}
+	
 	public class InputManager : MonoSingleton<InputManager>
 	{
-		private readonly List<Action> inputMouse = new();
-		private readonly List<Action> inputKeyboard = new();
+		private readonly Dictionary<(int, InputActionType), List<Action>> inputMouse = new();
+		private readonly Dictionary<(KeyCode, InputActionType), List<Action>> inputKeyboard = new();
 
 		[HideInInspector] public bool blockMouseInput;
 		[HideInInspector] public bool blockKeyboardInput;
 
-		public void AddMouseInput(object sender, Action action)
+		public void AddMouseInput(object sender, int mouseButtonIndex, InputActionType inputActionType, Action action)
 		{
 			if (sender is null)
 			{
-				Logger.Log(LogPriority.Exception, $"sender는 null 일 수 없습니다. Mouse Input 등록에 실패했습니다. 로그를 참조해주세요.");
+				Logger.Log(LogPriority.Exception, "sender는 null 일 수 없습니다. Mouse Input 등록에 실패했습니다. 로그를 참조해주세요.");
 
 				throw new ArgumentNullException();
 			}
 			
 			if (action is null)
 			{
-				Logger.Log(LogPriority.Exception, $"action은 null 일 수 없습니다. Mouse Input 등록에 실패했습니다. 로그를 참조해주세요.");
+				Logger.Log(LogPriority.Exception, "action은 null 일 수 없습니다. Mouse Input 등록에 실패했습니다. 로그를 참조해주세요.");
 
 				throw new ArgumentNullException();
 			}
-			
-			inputMouse.Add(action);
+
+			var key = (mouseButtonIndex, inputActionType);
+
+			List<Action> actions;
+
+			if (inputMouse.ContainsKey(key))
+			{
+				actions = inputMouse[key];
+				actions.Add(action);
+
+				inputMouse[key] = actions;
+			}
+			else
+			{
+				actions = new List<Action> {action};
+
+				inputMouse.Add((mouseButtonIndex, inputActionType), actions);
+			}
 			
 			Logger.Log(LogPriority.Verbose, $"마우스 입력 액션이 등록되었습니다. / methodName: {action.Method.Name}, from: {sender.GetType().Name}");
 		}
 		
-		public void AddKeyboardInput(object sender, Action action)
+		public void AddKeyboardInput(object sender, KeyCode keyCode, InputActionType inputActionType, Action action)
 		{
 			if (sender is null)
 			{
-				Logger.Log(LogPriority.Exception, $"sender는 null 일 수 없습니다. Keyboard Input 등록에 실패했습니다.");
+				Logger.Log(LogPriority.Exception, "sender는 null 일 수 없습니다. Keyboard Input 등록에 실패했습니다.");
 
 				throw new ArgumentNullException();
 			}
 			
 			if (action is null)
 			{
-				Logger.Log(LogPriority.Exception, $"action은 null 일 수 없습니다. Keyboard Input 등록에 실패했습니다.");
+				Logger.Log(LogPriority.Exception, "action은 null 일 수 없습니다. Keyboard Input 등록에 실패했습니다.");
 
 				throw new ArgumentNullException();
 			}
 			
-			inputKeyboard.Add(action);
+			var key = (keyCode, inputActionType);
+			
+			List<Action> actions;
+
+			if (inputKeyboard.ContainsKey(key))
+			{
+				actions = inputKeyboard[key];
+				actions.Add(action);
+
+				inputKeyboard[key] = actions;
+			}
+			else
+			{
+				actions = new List<Action> {action};
+
+				inputKeyboard.Add((keyCode, inputActionType), actions);
+			}
 			
 			Logger.Log(LogPriority.Verbose, $"키보드 입력 액션이 등록되었습니다. / methodName: {action.Method.Name}, from: {sender.GetType().Name}");
 		}
@@ -76,11 +114,8 @@ namespace Modules.InputManager
 					
 					continue;
 				}
-
-				foreach (var item in inputMouse)
-				{
-					item?.Invoke();
-				}
+				
+				// 코드 추가
 					
 				yield return null;
 			}
@@ -96,11 +131,8 @@ namespace Modules.InputManager
 					
 					continue;
 				}
-
-				foreach (var item in inputKeyboard)
-				{
-					item?.Invoke();
-				}
+				
+				// 코드 추가
 					
 				yield return null;
 			}

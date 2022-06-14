@@ -41,7 +41,7 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		// }
 	}
 
-	private void StopwatchSubscription(long? t)
+	private void StopwatchSubscription(long t)
 	{
 		Logger.Log(LogPriority.Debug, $"{t}");
 	}

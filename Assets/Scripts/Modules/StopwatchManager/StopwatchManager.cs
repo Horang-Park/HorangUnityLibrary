@@ -12,7 +12,7 @@ namespace Modules.StopwatchManager
 	public class StopwatchManager : MonoSingleton<StopwatchManager>
 	{
 		private readonly Dictionary<int, Stopwatch> stopwatches = new();
-		private readonly Dictionary<int, (bool, Stopwatch, ReactiveProperty<long?>)> runningStopwatches = new();
+		private readonly Dictionary<int, (bool, Stopwatch, ReactiveProperty<long>)> runningStopwatches = new();
 
 		#region 외부 사용 인터페이스
 
@@ -23,10 +23,17 @@ namespace Modules.StopwatchManager
 		public void StartStopwatch(string stopwatchName)
 		{
 			var hashKey = stopwatchName.GetHashCode();
+			
+			if (runningStopwatches.ContainsKey(hashKey))
+			{
+				Logger.Log(LogPriority.Error, $"{stopwatchName} 스톱워치는 이미 실행중입니다. 정지 후 사용해주세요.");
+				
+				return;
+			}
 
 			ActivateStopwatch(hashKey, out var stopwatch);
 
-			runningStopwatches.Add(stopwatchName.GetHashCode(), (false, stopwatch, new ReactiveProperty<long?>(null)));
+			runningStopwatches.Add(stopwatchName.GetHashCode(), (false, stopwatch, new ReactiveProperty<long>(0)));
 
 			stopwatch.Start();
 		}
@@ -90,7 +97,7 @@ namespace Modules.StopwatchManager
 		/// </summary>
 		/// <param name="stopwatchName">스톱워치 이름 (대소문자 구분)</param>
 		/// <returns>스톱워치의 현재까지 지난 시간</returns>
-		public long? StopStopwatch(string stopwatchName)
+		public long StopStopwatch(string stopwatchName)
 		{
 			return DeactivateStopwatch(stopwatchName.GetHashCode());
 		}
@@ -99,7 +106,7 @@ namespace Modules.StopwatchManager
 		/// 모든 스톱워치 중지
 		/// </summary>
 		/// <returns>작동하던 스톱워치들의 현재까지 지난 시간</returns>
-		public IEnumerable<long?> StopAllStopwatch()
+		public IEnumerable<long> StopAllStopwatch()
 		{
 			return runningStopwatches
 				.Select(runningStopwatch =>
@@ -107,7 +114,7 @@ namespace Modules.StopwatchManager
 		}
 
 		/// <summary>
-		/// 현재 작동하고 있는 스톱워치의 현재 지난 시간 반환
+		/// 현재 작동하고 있는 스톱워치의 현재 지난 시간 반환 (일회성)
 		/// </summary>
 		/// <param name="stopwatchName">스톱워치 이름</param>
 		/// <returns>스톱워치의 현재까지 지난 시간</returns>
@@ -124,17 +131,20 @@ namespace Modules.StopwatchManager
 		}
 
 		/// <summary>
-		/// 작동중인 스톱워치의 시간값을 실시간으로 받아옴
+		/// 작동중인 스톱워치의 시간값을 실시간으로 받아옴 [반드시 StartStopwatch를 호출한 후 호출할 것 (타이밍이 맞지 않아 정상동작 하지 않을 수 있음)]
 		/// </summary>
 		/// <param name="stopwatchName">스톱워치 이름</param>
 		/// <param name="subscriberAction">스트림을 구독할 콜백 액션</param>
-		public void SubscribeStopwatchTimeUpdate(string stopwatchName, Action<long?> subscriberAction)
+		public void SubscribeStopwatchTimeUpdate(string stopwatchName, Action<long> subscriberAction)
 		{
 			var hashKey = stopwatchName.GetHashCode();
 			
 			if (runningStopwatches.ContainsKey(hashKey))
 			{
 				var st = runningStopwatches[hashKey];
+
+				st.Item3.Dispose();
+				st.Item3 = new ReactiveProperty<long>(st.Item2.ElapsedMilliseconds);
 
 				Observable.FromMicroCoroutine(() => PropertyUpdater(st.Item2, st.Item3, subscriberAction)).Subscribe();
 			}
@@ -157,8 +167,6 @@ namespace Modules.StopwatchManager
 				}
 				else
 				{
-					Logger.Log(LogPriority.Error, $"{key} 스톱워치는 실행중입니다. 정지 후 사용해주세요.");
-
 					stopwatch = null;
 				}
 
@@ -173,9 +181,9 @@ namespace Modules.StopwatchManager
 			stopwatch = st;
 		}
 
-		private long? DeactivateStopwatch(int key)
+		private long DeactivateStopwatch(int key)
 		{
-			long? time;
+			long time;
 
 			if (runningStopwatches.ContainsKey(key))
 			{
@@ -193,7 +201,7 @@ namespace Modules.StopwatchManager
 			{
 				Logger.Log(LogPriority.Error, $"{key} 스톱워치가 실행되지 않았습니다. Start 후 사용해주세요.");
 
-				time = null;
+				time = 0;
 			}
 
 			return time;
@@ -224,16 +232,24 @@ namespace Modules.StopwatchManager
 			runningStopwatches[key] = st;
 		}
 
-		private static IEnumerator PropertyUpdater(Stopwatch st, IReactiveProperty<long?> rp, Action<long?> sa)
+		private static IEnumerator PropertyUpdater(Stopwatch st, IReactiveProperty<long> rp, Action<long> sa)
 		{
 			rp.Subscribe(sa);
 			
 			while (true)
 			{
+				if (st.IsRunning is false)
+				{
+					yield return null;
+					
+					continue;
+				}
+				
 				rp.Value = st.ElapsedMilliseconds;
 
 				yield return null;
 			}
+			// ReSharper disable once IteratorNeverReturns
 		}
 
 		#endregion

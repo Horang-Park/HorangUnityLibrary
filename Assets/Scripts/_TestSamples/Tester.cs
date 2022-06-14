@@ -23,7 +23,6 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IMouseButtonUp, IKeyboard
 	{
 		SceneManager.Instance.isLoadDone.Subscribe(OnLoadDone);
 		SceneManager.Instance.isUnloadDone.Subscribe(OnUnloadDone);
-		InputManager.Instance.blockKeyboardInput = true;
 	}
 
 	private void OnLoadDone(bool b)

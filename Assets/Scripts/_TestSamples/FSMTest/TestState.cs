@@ -26,7 +26,7 @@ namespace _TestSamples
 
 		public override void Exit()
 		{
-			$"{StateName} Exit".Log(LogPriority.Debug);
+			$"{StateName} Exit".ToLog(LogPriority.Debug);
 		}
 	}
 	
@@ -39,7 +39,7 @@ namespace _TestSamples
 
 		public override void Exit()
 		{
-			$"{StateName} Exit".Log(LogPriority.Debug);
+			$"{StateName} Exit".ToLog(LogPriority.Debug);
 		}
 	}
 

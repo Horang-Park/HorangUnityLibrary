@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using Cysharp.Threading.Tasks;
+using Modules.InputManager.Interfaces.KeyboardInput;
+using Modules.InputManager.Interfaces.MouseInput;
 using Structural;
 using UniRx;
 using UnityEngine;
@@ -9,93 +15,20 @@ using Logger = Utilities.Logger;
 
 namespace Modules.InputManager
 {
-	public enum InputActionType
-	{
-		Down,
-		Up,
-		Press,
-	}
-	
 	public class InputManager : MonoSingleton<InputManager>
 	{
-		private readonly Dictionary<(int, InputActionType), List<Action>> inputMouse = new();
-		private readonly Dictionary<(KeyCode, InputActionType), List<Action>> inputKeyboard = new();
+		private readonly List<(Component, MethodInfo)> inputMouseActions = new();
+		private readonly List<(Component, MethodInfo)> inputKeyboardActions = new();
 
 		[HideInInspector] public bool blockMouseInput;
 		[HideInInspector] public bool blockKeyboardInput;
 
-		public void AddMouseInput(object sender, int mouseButtonIndex, InputActionType inputActionType, Action action)
+		protected override void Awake()
 		{
-			if (sender is null)
-			{
-				Logger.Log(LogPriority.Exception, "sender는 null 일 수 없습니다. Mouse Input 등록에 실패했습니다. 로그를 참조해주세요.");
+			base.Awake();
 
-				throw new ArgumentNullException();
-			}
-			
-			if (action is null)
-			{
-				Logger.Log(LogPriority.Exception, "action은 null 일 수 없습니다. Mouse Input 등록에 실패했습니다. 로그를 참조해주세요.");
-
-				throw new ArgumentNullException();
-			}
-
-			var key = (mouseButtonIndex, inputActionType);
-
-			List<Action> actions;
-
-			if (inputMouse.ContainsKey(key))
-			{
-				actions = inputMouse[key];
-				actions.Add(action);
-
-				inputMouse[key] = actions;
-			}
-			else
-			{
-				actions = new List<Action> {action};
-
-				inputMouse.Add((mouseButtonIndex, inputActionType), actions);
-			}
-			
-			Logger.Log(LogPriority.Verbose, $"마우스 입력 액션이 등록되었습니다. / methodName: {action.Method.Name}, from: {sender.GetType().Name}");
-		}
-		
-		public void AddKeyboardInput(object sender, KeyCode keyCode, InputActionType inputActionType, Action action)
-		{
-			if (sender is null)
-			{
-				Logger.Log(LogPriority.Exception, "sender는 null 일 수 없습니다. Keyboard Input 등록에 실패했습니다.");
-
-				throw new ArgumentNullException();
-			}
-			
-			if (action is null)
-			{
-				Logger.Log(LogPriority.Exception, "action은 null 일 수 없습니다. Keyboard Input 등록에 실패했습니다.");
-
-				throw new ArgumentNullException();
-			}
-			
-			var key = (keyCode, inputActionType);
-			
-			List<Action> actions;
-
-			if (inputKeyboard.ContainsKey(key))
-			{
-				actions = inputKeyboard[key];
-				actions.Add(action);
-
-				inputKeyboard[key] = actions;
-			}
-			else
-			{
-				actions = new List<Action> {action};
-
-				inputKeyboard.Add((keyCode, inputActionType), actions);
-			}
-			
-			Logger.Log(LogPriority.Verbose, $"키보드 입력 액션이 등록되었습니다. / methodName: {action.Method.Name}, from: {sender.GetType().Name}");
+			Observable.FromMicroCoroutine(FindMouseInputImplementations).Subscribe().AddTo(this);
+			Observable.FromMicroCoroutine(FindKeyboardInputImplementations).Subscribe().AddTo(this);
 		}
 
 		private void Start()
@@ -114,8 +47,11 @@ namespace Modules.InputManager
 					
 					continue;
 				}
-				
-				// 코드 추가
+
+				foreach (var item in inputMouseActions)
+				{
+					item.Item2.Invoke(item.Item1, null);
+				}
 					
 				yield return null;
 			}
@@ -132,10 +68,81 @@ namespace Modules.InputManager
 					continue;
 				}
 				
-				// 코드 추가
+				foreach (var item in inputKeyboardActions)
+				{
+					item.Item2.Invoke(item.Item1, null);
+				}
 					
 				yield return null;
 			}
+		}
+
+		private IEnumerator FindMouseInputImplementations()
+		{
+			var stopwatch = new Stopwatch();
+			stopwatch.Start();
+			
+			var mouseInputType = typeof(IMouseInput);
+			var mouseInputImplementationTypes = AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany(s => s.GetTypes())
+				.Where(p => mouseInputType.IsAssignableFrom(p) && !p.IsInterface && p.IsClass && !p.IsAbstract);
+			
+			foreach (var item in mouseInputImplementationTypes)
+			{
+				foreach (var implementationMethod in item.GetMethods())
+				{
+					if (!implementationMethod.Name.Contains("Mouse"))
+					{
+						yield return null;
+						
+						continue;
+					}
+					
+					var implementationClassInstance = GameObject.Find(item.FullName).GetComponent(item.FullName);
+						
+					inputMouseActions.Add((implementationClassInstance, implementationMethod));
+					
+					yield return null;
+				}
+			}
+			
+			stopwatch.Stop();
+			Logger.Log(LogPriority.Verbose, $"Mouse input 초기화 완료까지 걸린 시간: {stopwatch.ElapsedMilliseconds}ms");
+			stopwatch.Reset();
+		}
+	
+		private IEnumerator FindKeyboardInputImplementations()
+		{
+			var stopwatch = new Stopwatch();
+			stopwatch.Start();
+				
+			var keyboardInputType = typeof(IKeyboardInput);
+			var keyboardInputImplementationTypes = AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany(s => s.GetTypes())
+				.Where(p => keyboardInputType.IsAssignableFrom(p) && !p.IsInterface && p.IsClass && !p.IsAbstract);
+				
+			foreach (var item in keyboardInputImplementationTypes)
+			{
+				foreach (var implementationMethod in item.GetMethods())
+				{
+					if (!implementationMethod.Name.Contains("Keyboard"))
+					{
+						yield return null;
+							
+						continue;
+					}
+						
+					var implementationClassInstance = GameObject.Find(item.FullName).GetComponent(item.FullName);
+							
+					inputKeyboardActions.Add((implementationClassInstance, implementationMethod));
+						
+					yield return null;
+				}
+			}
+				
+			stopwatch.Stop();
+			Logger.Log(LogPriority.Verbose, $"Keyboard input 초기화 완료까지 걸린 시간: {stopwatch.ElapsedMilliseconds}ms");
+			stopwatch.Reset();
 		}
 	}
 }

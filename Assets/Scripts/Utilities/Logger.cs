@@ -100,7 +100,7 @@ namespace Utilities
 		/// /// </summary>
 		/// <param name="message"></param>
 		/// <param name="logPriority"></param>
-		public static string Log(this string message, LogPriority logPriority)
+		public static string ToLog(this string message, LogPriority logPriority)
 		{
 			_isInternalLogCall = true;
 			

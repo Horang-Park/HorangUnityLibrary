@@ -1,6 +1,7 @@
-using System;
 using _TestSamples;
 using Modules.InputManager;
+using Modules.InputManager.Interfaces.KeyboardInput;
+using Modules.InputManager.Interfaces.MouseInput;
 using Modules.SoundManager;
 using UniRx;
 using UnityEngine;
@@ -9,7 +10,7 @@ using Utilities;
 using Logger = Utilities.Logger;
 using SceneManager = Modules.SceneManager.SceneManager;
 
-public class Tester : MonoBehaviour
+public class Tester : MonoBehaviour, IMouseButtonDown, IMouseButtonUp, IKeyboardKeyDown
 {
 	private FSMTestFacade fsmTestFacade;
 	
@@ -22,29 +23,42 @@ public class Tester : MonoBehaviour
 	{
 		SceneManager.Instance.isLoadDone.Subscribe(OnLoadDone);
 		SceneManager.Instance.isUnloadDone.Subscribe(OnUnloadDone);
-		
-		InputManager.Instance.AddMouseInput(this, () =>
-		{
-			if (Input.GetKeyDown(KeyCode.F1))
-			{
-				SceneManager.Instance.LoadScene("1_LoadTestScene 1".Log(LogPriority.Exception).Log(LogPriority.Error), LoadSceneMode.Additive);
-				SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Additive);
-				SceneManager.Instance.LoadScene("3_LoadTestScene 3", LoadSceneMode.Additive);
-			
-				"f1 누름".Log(LogPriority.Debug);
-			}
-		});
-		
-		InputManager.Instance.AddKeyboardInput(this, () =>
-		{
-			if (Input.GetMouseButtonDown(0))
-			{
-				"마우스 좌클릭".Log(LogPriority.Debug);
-			}
-		});
+		InputManager.Instance.blockKeyboardInput = true;
 	}
 
-	private void Update()
+	private void OnLoadDone(bool b)
+	{
+		if (b)
+		{
+			Logger.Log(LogPriority.Debug, $"{b}");
+		}
+	}
+
+	private void OnUnloadDone(bool b)
+	{
+		if (b)
+		{
+			Logger.Log(LogPriority.Debug, $"{b}");
+		}
+	}
+
+	public void OnMouseButtonUp()
+	{
+		if (Input.GetMouseButtonUp(0))
+		{
+			"MouseUP".ToLog(LogPriority.Debug);
+		}
+	}
+
+	public void OnMouseButtonDown()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			"MouseDown".ToLog(LogPriority.Debug);
+		}
+	}
+
+	public void OnKeyboardKeyDown()
 	{
 		if (Input.GetKeyDown(KeyCode.F2))
 		{
@@ -91,22 +105,6 @@ public class Tester : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.F12))
 		{
 			fsmTestFacade.ChangeState();
-		}
-	}
-
-	private void OnLoadDone(bool b)
-	{
-		if (b is true)
-		{
-			Logger.Log(LogPriority.Debug, $"{b}");
-		}
-	}
-
-	private void OnUnloadDone(bool b)
-	{
-		if (b is true)
-		{
-			Logger.Log(LogPriority.Debug, $"{b}");
 		}
 	}
 }

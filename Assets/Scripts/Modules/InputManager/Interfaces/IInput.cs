@@ -1,6 +1,6 @@
 ﻿namespace Modules.InputManager.Interfaces
 {
-    public interface IInput
-    {
-    }
+	public interface IInput
+	{
+	}
 }

@@ -2,7 +2,7 @@
 
 namespace Modules.FSM
 {
-	public abstract class State
+	public abstract class  State
 	{
 		public string StateName { protected set; get; }
 
@@ -15,11 +15,6 @@ namespace Modules.FSM
 		/// 상태 전환 완료한 후 실행
 		/// </summary>
 		public virtual void LateInitialize() {}
-		
-		/// <summary>
-		/// Input 관련 처리할 때 사용 (Update)
-		/// </summary>
-		public virtual void HandleInput() {}
 		
 		/// <summary>
 		/// 로직관련 처리할 때 사용 (Update)

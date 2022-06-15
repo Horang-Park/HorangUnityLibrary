@@ -46,7 +46,6 @@ namespace Modules.FSM
 
 		private void Update()
 		{
-			CurrentState.HandleInput();
 			CurrentState.LogicUpdate();
 		}
 

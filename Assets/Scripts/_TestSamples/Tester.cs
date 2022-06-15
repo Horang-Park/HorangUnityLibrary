@@ -58,29 +58,47 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 	{
 		if (Input.GetKeyDown(KeyCode.F1))
 		{
-			StopwatchManager.Instance.StartStopwatch("Tester");
-			StopwatchManager.Instance.SubscribeStopwatchTimeUpdate("Tester", StopwatchSubscription);
-		}
+			var path = Application.streamingAssetsPath + "/SampleZipZip.zip";
+			var files = CompressionManager.GetFileListInZip(path);
 
+			foreach (var name in files)
+			{
+				name.ToLog(LogPriority.Debug);
+			}
+		}
+		
 		if (Input.GetKeyDown(KeyCode.F2))
 		{
-			StopwatchManager.Instance.PauseStopwatch("Tester");
+			var src = Application.streamingAssetsPath + "/SampleZipZip.zip";
+			var des = Application.streamingAssetsPath;
+			var files = CompressionManager.Unzip(src, des);
 		}
 		
-		if (Input.GetKeyDown(KeyCode.F3))
-		{
-			StopwatchManager.Instance.ResumeStopwatch("Tester");
-		}
-		
-		if (Input.GetKeyDown(KeyCode.F4))
-		{
-			StopwatchManager.Instance.StopStopwatch("Tester").ToString().ToLog(LogPriority.Debug);
-		}
-
-		if (Input.GetKeyDown(KeyCode.F5))
-		{
-			StopwatchManager.Instance.CurrentTime("Tester").ToString().ToLog(LogPriority.Debug);
-		}
+		// if (Input.GetKeyDown(KeyCode.F1))
+		// {
+		// 	StopwatchManager.Instance.StartStopwatch("Tester");
+		// 	StopwatchManager.Instance.SubscribeStopwatchTimeUpdate("Tester", StopwatchSubscription);
+		// }
+		//
+		// if (Input.GetKeyDown(KeyCode.F2))
+		// {
+		// 	StopwatchManager.Instance.PauseStopwatch("Tester");
+		// }
+		//
+		// if (Input.GetKeyDown(KeyCode.F3))
+		// {
+		// 	StopwatchManager.Instance.ResumeStopwatch("Tester");
+		// }
+		//
+		// if (Input.GetKeyDown(KeyCode.F4))
+		// {
+		// 	StopwatchManager.Instance.StopStopwatch("Tester").ToString().ToLog(LogPriority.Debug);
+		// }
+		//
+		// if (Input.GetKeyDown(KeyCode.F5))
+		// {
+		// 	StopwatchManager.Instance.CurrentTime("Tester").ToString().ToLog(LogPriority.Debug);
+		// }
 
 		// if (Input.GetKeyDown(KeyCode.F2))
 		// {

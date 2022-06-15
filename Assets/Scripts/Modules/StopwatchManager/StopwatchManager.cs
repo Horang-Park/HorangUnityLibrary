@@ -118,7 +118,7 @@ namespace Modules.StopwatchManager
 		/// </summary>
 		/// <param name="stopwatchName">스톱워치 이름</param>
 		/// <returns>스톱워치의 현재까지 지난 시간</returns>
-		public long? CurrentTime(string stopwatchName)
+		public long CurrentTime(string stopwatchName)
 		{
 			if (TryGetActivatedStopwatch(stopwatchName.GetHashCode(), out var isPause, out var stopwatch))
 			{
@@ -127,7 +127,7 @@ namespace Modules.StopwatchManager
 
 			Logger.Log(LogPriority.Error, $"{stopwatchName} 이름의 스톱워치가 작동중이지 않습니다.");
 
-			return null;
+			return 0;
 		}
 
 		/// <summary>

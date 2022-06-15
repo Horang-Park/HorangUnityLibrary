@@ -58,21 +58,26 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 	{
 		if (Input.GetKeyDown(KeyCode.F1))
 		{
-			var path = Application.streamingAssetsPath + "/SampleZipZip.zip";
-			var files = CompressionManager.GetFileListInZip(path);
-
-			foreach (var name in files)
-			{
-				name.ToLog(LogPriority.Debug);
-			}
+			var src = Application.streamingAssetsPath + "/Test.xlsx";
+			var dest = Application.streamingAssetsPath + "/Test.json";
+			
+			ExcelToJson.XlsxToJson(src, dest);
+			
+			// var path = Application.streamingAssetsPath + "/SampleZipZip.zip";
+			// var files = CompressionManager.GetFileListInZip(path);
+			//
+			// foreach (var name in files)
+			// {
+			// 	name.ToLog(LogPriority.Debug);
+			// }
 		}
 		
-		if (Input.GetKeyDown(KeyCode.F2))
-		{
-			var src = Application.streamingAssetsPath + "/SampleZipZip.zip";
-			var des = Application.streamingAssetsPath;
-			var files = CompressionManager.Unzip(src, des);
-		}
+		// if (Input.GetKeyDown(KeyCode.F2))
+		// {
+		// 	var src = Application.streamingAssetsPath + "/SampleZipZip.zip";
+		// 	var des = Application.streamingAssetsPath;
+		// 	var files = CompressionManager.Unzip(src, des);
+		// }
 		
 		// if (Input.GetKeyDown(KeyCode.F1))
 		// {

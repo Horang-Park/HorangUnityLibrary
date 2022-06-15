@@ -8,7 +8,7 @@ namespace Utilities
 		public static bool HasCameraPermission()
 		{
 #if UNITY_ANDROID
-			return Permission.HasUserAuthorizedPermission(Permission.Camera);
+			return UnityEngine.Android.Permission.HasUserAuthorizedPermission(UnityEngine.Android.Permission.Camera);
 #elif UNITY_IOS
 			return Application.HasUserAuthorization(UserAuthorization.WebCam);
 #else
@@ -19,7 +19,7 @@ namespace Utilities
 		public static bool HasMicrophonePermission()
 		{
 #if UNITY_ANDROID
-			return Permission.HasUserAuthorizedPermission(Permission.Microphone);
+			return UnityEngine.Android.Permission.HasUserAuthorizedPermission(UnityEngine.Android.Permission.Microphone);
 #elif UNITY_IOS
 			return Application.HasUserAuthorization(UserAuthorization.Microphone);
 #else
@@ -30,7 +30,7 @@ namespace Utilities
 		public static IEnumerator RequestCameraPermission()
 		{
 #if UNITY_ANDROID
-			Permission.RequestUserPermission(Permission.Camera);
+			UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.Camera);
 			yield return null;
 #elif UNITY_IOS
 			yield return Application.RequestUserAuthorization(UserAuthorization.WebCam);
@@ -43,7 +43,7 @@ namespace Utilities
 		public static IEnumerator RequestMicrophonePermission()
 		{
 #if UNITY_ANDROID
-			Permission.RequestUserPermission(Permission.Microphone);
+			UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.Microphone);
 			yield return null;
 #elif UNITY_IOS
 			yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);

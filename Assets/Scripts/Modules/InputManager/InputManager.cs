@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Cysharp.Threading.Tasks;
 using Modules.InputManager.Interfaces.KeyboardInput;
 using Modules.InputManager.Interfaces.MouseInput;
 using Structural;
@@ -83,7 +81,7 @@ namespace Modules.InputManager
 			stopwatch.Start();
 			
 			var mouseInputType = typeof(IMouseInput);
-			var mouseInputImplementationTypes = AppDomain.CurrentDomain.GetAssemblies()
+			var mouseInputImplementationTypes = System.AppDomain.CurrentDomain.GetAssemblies()
 				.SelectMany(s => s.GetTypes())
 				.Where(p => mouseInputType.IsAssignableFrom(p) && !p.IsInterface && p.IsClass && !p.IsAbstract);
 			
@@ -117,7 +115,7 @@ namespace Modules.InputManager
 			stopwatch.Start();
 				
 			var keyboardInputType = typeof(IKeyboardInput);
-			var keyboardInputImplementationTypes = AppDomain.CurrentDomain.GetAssemblies()
+			var keyboardInputImplementationTypes = System.AppDomain.CurrentDomain.GetAssemblies()
 				.SelectMany(s => s.GetTypes())
 				.Where(p => keyboardInputType.IsAssignableFrom(p) && !p.IsInterface && p.IsClass && !p.IsAbstract);
 				

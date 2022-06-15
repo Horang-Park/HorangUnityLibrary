@@ -77,10 +77,10 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        AddToEmbeddedBinaries: false
+        AddToEmbeddedBinaries: true
         CPU: AnyCPU
         CompileFlags: 
-        FrameworkDependencies: CoreData;CoreFoundation;
+        FrameworkDependencies: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 

@@ -16,7 +16,7 @@ namespace Utilities
 
 			var workbook = new Workbook(sourcePath);
 
-			workbook.Save(jsonSaveDestinationPath, SaveFormat.Json);
+			workbook.Save(jsonSaveDestinationPath);
 			
 			workbook.Dispose();
 		}

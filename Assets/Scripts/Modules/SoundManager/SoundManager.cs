@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Structural;
 using UniRx;
@@ -16,7 +15,7 @@ namespace Modules.SoundManager
 
 		private readonly Dictionary<int, AudioClipData> audioClipDatas = new();
 		private readonly Dictionary<int, SoundObject> soundObjects = new();
-		private readonly Dictionary<int, IDisposable> disposables = new();
+		private readonly Dictionary<int, System.IDisposable> disposables = new();
 		private readonly Dictionary<AudioClipCategory, List<SoundObject>> soundObjectsByCategory = new();
 
 		[HideInInspector] public float fadeInSpeedMultiplier;
@@ -30,7 +29,7 @@ namespace Modules.SoundManager
 		/// <param name="audioClipName">재생할 오디오 클립 이름</param>
 		/// <param name="getPlayTime">현재 오디오 재생 시간 갖고오는 콜백 함수</param>
 		/// <param name="useFadeIn">페이드 인 사용 여부</param>
-		public void Play(string audioClipName, Action<float> getPlayTime = null, bool useFadeIn = false)
+		public void Play(string audioClipName, System.Action<float> getPlayTime = null, bool useFadeIn = false)
 		{
 			var hashKey = audioClipName.GetHashCode();
 			
@@ -213,7 +212,7 @@ namespace Modules.SoundManager
 				}
 			}
 
-			foreach (var type in Enum.GetValues(typeof(AudioClipCategory)))
+			foreach (var type in System.Enum.GetValues(typeof(AudioClipCategory)))
 			{
 				soundObjectsByCategory.Add((AudioClipCategory)type, new List<SoundObject>());
 			}
@@ -255,7 +254,7 @@ namespace Modules.SoundManager
 			return true;
 		}
 
-		private bool TryGetDisposable(int key, out IDisposable disposable)
+		private bool TryGetDisposable(int key, out System.IDisposable disposable)
 		{
 			if (IsExistDisposable(key) is false)
 			{

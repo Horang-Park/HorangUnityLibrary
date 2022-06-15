@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Text;
 using UniRx;
 using UnityEngine;
@@ -16,8 +15,8 @@ namespace Modules.SoundManager
 		private float targetVolume;
 		private bool fromPause;
 
-		private IDisposable fadeOutDisposable;
-		private IDisposable fadeInDisposable;
+		private System.IDisposable fadeOutDisposable;
+		private System.IDisposable fadeInDisposable;
 
 		public readonly Subject<float> CurrentPlayTime = new();
 
@@ -55,7 +54,7 @@ namespace Modules.SoundManager
 					audioSource.loop = false;
 					break;
 				default:
-					throw new ArgumentOutOfRangeException();
+					throw new System.ArgumentOutOfRangeException();
 			}
 			
 			Stop();
@@ -119,7 +118,7 @@ namespace Modules.SoundManager
 			{
 				Logger.Log(LogPriority.Exception, "페이드 아웃의 속도 계수는 0 이하가 될 수 없습니다.");
 
-				throw new ArgumentException();
+				throw new System.ArgumentException();
 			}
 			
 			if (!audioSource.isPlaying)
@@ -145,7 +144,7 @@ namespace Modules.SoundManager
 			{
 				Logger.Log(LogPriority.Exception, "페이드 인의 속도 계수는 0 이하가 될 수 없습니다.");
 
-				throw new ArgumentException();
+				throw new System.ArgumentException();
 			}
 
 			if (fadeInDisposable is not null)
@@ -215,7 +214,7 @@ namespace Modules.SoundManager
 			}
 		}
 
-		private IEnumerator PlayTimeUpdater(IObserver<float> observer)
+		private IEnumerator PlayTimeUpdater(System.IObserver<float> observer)
 		{
 			while (true)
 			{

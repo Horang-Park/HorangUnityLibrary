@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -135,7 +134,7 @@ namespace Modules.StopwatchManager
 		/// </summary>
 		/// <param name="stopwatchName">스톱워치 이름</param>
 		/// <param name="subscriberAction">스트림을 구독할 콜백 액션</param>
-		public void SubscribeStopwatchTimeUpdate(string stopwatchName, Action<long> subscriberAction)
+		public void SubscribeStopwatchTimeUpdate(string stopwatchName, System.Action<long> subscriberAction)
 		{
 			var hashKey = stopwatchName.GetHashCode();
 			
@@ -232,7 +231,7 @@ namespace Modules.StopwatchManager
 			runningStopwatches[key] = st;
 		}
 
-		private static IEnumerator PropertyUpdater(Stopwatch st, IReactiveProperty<long> rp, Action<long> sa)
+		private static IEnumerator PropertyUpdater(Stopwatch st, IReactiveProperty<long> rp, System.Action<long> sa)
 		{
 			rp.Subscribe(sa);
 			

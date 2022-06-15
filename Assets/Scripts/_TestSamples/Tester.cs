@@ -58,11 +58,6 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 	{
 		if (Input.GetKeyDown(KeyCode.F1))
 		{
-			var src = Application.streamingAssetsPath + "/Test.xlsx";
-			var dest = Application.streamingAssetsPath + "/Test.json";
-			
-			ExcelToJson.XlsxToJson(src, dest);
-			
 			// var path = Application.streamingAssetsPath + "/SampleZipZip.zip";
 			// var files = CompressionManager.GetFileListInZip(path);
 			//

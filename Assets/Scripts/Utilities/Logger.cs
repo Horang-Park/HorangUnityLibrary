@@ -12,6 +12,7 @@ namespace Utilities
 		Warning,
 		Error,
 		Exception,
+		Information,
 	}
 	
 	public static class Logger
@@ -23,10 +24,11 @@ namespace Utilities
 			"<color=#fc960f>",
 			"<color=#fc460f>",
 			"<color=#f725a3>",
+			"<color=#a6a6a6>",
 		};
 		private const string LoggerPriorityColorPostfix = "</color>";
 
-		private const string FontSizePrefix = "<size=12>";
+		private const string FontSizePrefix = "<size=13>";
 		private const string FontSizePostfix = "</size>";
 		private const string FontBoldPrefix = "<b>";
 		private const string FontBoldPostfix = "</b>";
@@ -75,6 +77,7 @@ namespace Utilities
 			{
 				case LogPriority.Debug:
 				case LogPriority.Verbose:
+				case LogPriority.Information:
 					UnityEngine.Debug.Log(sb.ToString());
 					break;
 				case LogPriority.Warning:

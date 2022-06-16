@@ -1,10 +1,12 @@
 using _TestSamples;
+using Modules.API;
 using Modules.InputManager.Interfaces.KeyboardInput;
 using Modules.InputManager.Interfaces.MouseInput;
 using Modules.SoundManager;
 using Modules.StopwatchManager;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using Utilities;
 using Logger = Utilities.Logger;
@@ -19,10 +21,15 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		fsmTestFacade = GetComponent(typeof(FSMTestFacade)) as FSMTestFacade;
 	}
 
-	private void Start()
+	private async void Start()
 	{
 		SceneManager.Instance.isLoadDone.Subscribe(OnLoadDone);
 		SceneManager.Instance.isUnloadDone.Subscribe(OnUnloadDone);
+
+		var www = UnityWebRequest.Get("https://api.biboboo.com/api/splash");
+		var res = await Requester.Send(www, msg => msg.ToLog(LogPriority.Error));
+
+		res.ToLog(LogPriority.Debug);
 	}
 
 	private void OnLoadDone(bool b)

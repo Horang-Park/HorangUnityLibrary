@@ -19,6 +19,8 @@ namespace Modules.Parser
 		/// <returns>템플릿 형 반환</returns>
 		public static T JsonParsing(string json)
 		{
+			Logger.Log(LogPriority.Information, $"Original Json: {json}");
+			
 			try
 			{
 				return JsonConvert.DeserializeObject<T>(json, JsonParserInternalUseOnly.JsonSettings);
@@ -40,6 +42,8 @@ namespace Modules.Parser
 		/// <exception cref="NullReferenceException">파라미터로 넘겨준 Json을 JArray로 파싱에 실패했을 때</exception>
 		public static List<T> JsonArrayParsing(string json)
 		{
+			Logger.Log(LogPriority.Information, $"Original Json: {json}");
+			
 			JArray arrayData;
 
 			try

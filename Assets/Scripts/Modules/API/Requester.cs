@@ -19,7 +19,7 @@ namespace Modules.API
 			sb.Append("URL: ");
 			sb.Append(unityWebRequest.url);
 
-			Logger.Log(LogPriority.Verbose, $"[API Request Send] - Info: {sb}");
+			Logger.Log(LogPriority.Information, $"[API Request Send] - Info: {sb}");
 			
 			var operation = await unityWebRequest.SendWebRequest();
 

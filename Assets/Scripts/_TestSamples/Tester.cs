@@ -66,7 +66,7 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		if (Input.GetKeyDown(KeyCode.F1))
 		{
 			// var path = Application.streamingAssetsPath + "/SampleZipZip.zip";
-			// var files = CompressionManager.GetFileListInZip(path);
+			// var files = Compression.GetFileListInZip(path);
 			//
 			// foreach (var name in files)
 			// {
@@ -78,7 +78,7 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		// {
 		// 	var src = Application.streamingAssetsPath + "/SampleZipZip.zip";
 		// 	var des = Application.streamingAssetsPath;
-		// 	var files = CompressionManager.Unzip(src, des);
+		// 	var files = Compression.Unzip(src, des);
 		// }
 		
 		// if (Input.GetKeyDown(KeyCode.F1))

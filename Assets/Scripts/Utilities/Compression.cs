@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Utilities
 {
-	public static class CompressionManager
+	public static class Compression
 	{
 		/// <summary>
 		/// 압축하기

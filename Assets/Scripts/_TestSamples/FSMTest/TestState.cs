@@ -6,7 +6,7 @@ using Utilities;
 
 namespace _TestSamples
 {
-	public class TestState : State
+	public class TestState : State, IKeyboardKeyDown
 	{
 		public static readonly IntReactiveProperty a = new ();
 		
@@ -28,6 +28,14 @@ namespace _TestSamples
 		public override void Exit()
 		{
 			$"{StateName} Exit".ToLog(LogPriority.Debug);
+		}
+
+		public void OnKeyboardKeyDown()
+		{
+			if (Input.GetKeyDown(KeyCode.Tab))
+			{
+				"테스트 스테이트에서 탭 키 누름".ToLog(LogPriority.Debug);
+			}
 		}
 	}
 	

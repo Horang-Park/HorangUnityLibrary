@@ -9,14 +9,14 @@ public class SceneAutoPasser : MonoBehaviour
 {
 	public string nextSceneName;
 	public float delayTime;
-	public UnityEvent OnMoveNextScene;
+	public UnityEvent onMoveNextScene;
 
 	private void Awake()
 	{
 		Observable.FromCoroutine(MoveToNextScene)
 			.DoOnCompleted(() =>
 			{
-				OnMoveNextScene?.Invoke();
+				onMoveNextScene?.Invoke();
 				
 				UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextSceneName);
 				

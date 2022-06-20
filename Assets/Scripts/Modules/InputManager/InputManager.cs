@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,6 +8,7 @@ using Modules.InputManager.Interfaces.KeyboardInput;
 using Modules.InputManager.Interfaces.MouseInput;
 using Structural;
 using UniRx;
+using UnityEditor;
 using UnityEngine;
 using Utilities;
 using Logger = Utilities.Logger;
@@ -15,8 +17,8 @@ namespace Modules.InputManager
 {
 	public class InputManager : MonoSingleton<InputManager>
 	{
-		private readonly List<(Component, MethodInfo)> inputMouseActions = new();
-		private readonly List<(Component, MethodInfo)> inputKeyboardActions = new();
+		private readonly List<(object, MethodInfo)> inputMouseActions = new();
+		private readonly List<(object, MethodInfo)> inputKeyboardActions = new();
 
 		[HideInInspector] public bool blockMouseInput;
 		[HideInInspector] public bool blockKeyboardInput;
@@ -96,7 +98,25 @@ namespace Modules.InputManager
 						continue;
 					}
 					
-					var implementationClassInstance = GameObject.Find(item.FullName).GetComponent(item.FullName);
+					// 예외처리
+					if (item.FullName is null)
+					{
+						Logger.Log(LogPriority.Exception, "메서드의 정보를 가져올 수 없습니다.");
+					
+						throw new NullReferenceException();
+					}
+					
+					var instanceType = Type.GetType(item.FullName);
+					
+					if (instanceType is null)
+					{
+						Logger.Log(LogPriority.Exception, $"{item.FullName}의 타입을 가져올 수 없습니다.");
+						
+						throw new NullReferenceException();
+					}
+					
+					// 인스턴스 생성
+					var implementationClassInstance = Activator.CreateInstance(instanceType);
 						
 					inputMouseActions.Add((implementationClassInstance, implementationMethod));
 					
@@ -129,8 +149,26 @@ namespace Modules.InputManager
 							
 						continue;
 					}
+					
+					// 예외처리
+					if (item.FullName is null)
+					{
+						Logger.Log(LogPriority.Exception, "메서드의 정보를 가져올 수 없습니다.");
+					
+						throw new NullReferenceException();
+					}
+					
+					var instanceType = Type.GetType(item.FullName);
+					
+					if (instanceType is null)
+					{
+						Logger.Log(LogPriority.Exception, $"{item.FullName}의 타입을 가져올 수 없습니다.");
 						
-					var implementationClassInstance = GameObject.Find(item.FullName).GetComponent(item.FullName);
+						throw new NullReferenceException();
+					}
+					
+					// 인스턴스 생성
+					var implementationClassInstance = Activator.CreateInstance(instanceType);
 							
 					inputKeyboardActions.Add((implementationClassInstance, implementationMethod));
 						

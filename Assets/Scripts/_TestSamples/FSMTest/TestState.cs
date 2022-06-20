@@ -1,4 +1,5 @@
 ﻿using Modules.FSM;
+using Modules.InputManager.Interfaces.KeyboardInput;
 using UniRx;
 using UnityEngine;
 using Utilities;

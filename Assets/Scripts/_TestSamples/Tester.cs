@@ -1,5 +1,6 @@
 using _TestSamples;
 using Modules.API;
+using Modules.CameraManager;
 using Modules.InputManager.Interfaces.KeyboardInput;
 using Modules.InputManager.Interfaces.MouseInput;
 using Modules.SoundManager;
@@ -16,6 +17,8 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 {
 	private FSMTestFacade fsmTestFacade;
 
+	public CameraElement mainCamera;
+
 	private void Awake()
 	{
 		fsmTestFacade = GetComponent(typeof(FSMTestFacade)) as FSMTestFacade;
@@ -30,6 +33,8 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		var res = await Requester.Send(www, msg => msg.ToLog(LogPriority.Error));
 
 		res.ToLog(LogPriority.Debug);
+
+		CameraManager.Instance.AddCamera("Main Camera", mainCamera);
 	}
 
 	private void OnLoadDone(bool b)
@@ -58,6 +63,10 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		if (Input.GetMouseButtonDown(0))
 		{
 			"MouseDown".ToLog(LogPriority.Debug);
+
+			var c = CameraManager.Instance.GetCamera("Main Camera");
+
+			c.tag = "Main";
 		}
 	}
 

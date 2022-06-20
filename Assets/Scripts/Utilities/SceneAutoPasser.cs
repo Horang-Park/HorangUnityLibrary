@@ -16,11 +16,11 @@ public class SceneAutoPasser : MonoBehaviour
 		Observable.FromCoroutine(MoveToNextScene)
 			.DoOnCompleted(() =>
 			{
-				onMoveNextScene?.Invoke();
-				
 				UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextSceneName);
 				
 				Logger.Log(LogPriority.Verbose, $"{nextSceneName} 씬으로 이동합니다.");
+				
+				onMoveNextScene?.Invoke();
 			})
 			.Subscribe();
 	}

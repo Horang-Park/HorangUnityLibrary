@@ -220,7 +220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nextSceneName: 0_SampleTestScene
   delayTime: 1
-  OnMoveNextScene:
+  onMoveNextScene:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1730436813}

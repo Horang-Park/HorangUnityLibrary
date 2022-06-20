@@ -220,6 +220,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nextSceneName: 0_SampleTestScene
   delayTime: 1
+  OnMoveNextScene:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1730436813}
+        m_TargetAssemblyTypeName: Tester, Assembly-CSharp
+        m_MethodName: MoveToMainScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &231759721
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,11 +500,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87de641322d92794d94262528fee105b, type: 3}
+  m_Script: {fileID: 11500000, guid: eae96363b09c4ce8a27e7cf9d372a7b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
-  cameraType: 0
 --- !u!1 &1064402395
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,6 +605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13af2a1fc16050a4daddc7802eed96fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 963194229}
 --- !u!4 &1730436814
 Transform:
   m_ObjectHideFlags: 0

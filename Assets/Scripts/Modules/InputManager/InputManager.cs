@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Modules.InputManager.Interfaces.KeyboardInput;
 using Modules.InputManager.Interfaces.MouseInput;
@@ -18,8 +19,10 @@ namespace Modules.InputManager
 		private readonly List<(object, MethodInfo)> inputMouseActions = new();
 		private readonly List<(object, MethodInfo)> inputKeyboardActions = new();
 
-		/*[HideInInspector]*/ public bool blockMouseInput;
-		/*[HideInInspector]*/ public bool blockKeyboardInput;
+		public bool blockMouseInput;
+		public bool blockKeyboardInput;
+
+		private readonly CancellationTokenSource inputManagerCancellationToken = new();
 
 		protected override async void Awake()
 		{
@@ -31,8 +34,14 @@ namespace Modules.InputManager
 
 		private void Start()
 		{
-			UniTask.RunOnThreadPool(MouseUpdate);
-			UniTask.RunOnThreadPool(KeyboardUpdate);
+			UniTask.RunOnThreadPool(MouseUpdate, cancellationToken: this.GetCancellationTokenOnDestroy());
+			UniTask.RunOnThreadPool(KeyboardUpdate, cancellationToken: this.GetCancellationTokenOnDestroy());
+		}
+
+		private void OnDestroy()
+		{
+			inputManagerCancellationToken.Cancel();
+			inputManagerCancellationToken.Dispose();
 		}
 
 		private async UniTask MouseUpdate()
@@ -41,7 +50,7 @@ namespace Modules.InputManager
 			{
 				if (blockMouseInput)
 				{
-					await UniTask.Yield();
+					await UniTask.Yield(inputManagerCancellationToken.Token);
 
 					continue;
 				}
@@ -51,7 +60,7 @@ namespace Modules.InputManager
 					item.Item2.Invoke(item.Item1, null);
 				}
 
-				await UniTask.Yield();
+				await UniTask.Yield(inputManagerCancellationToken.Token);
 			}
 		}
 
@@ -61,7 +70,7 @@ namespace Modules.InputManager
 			{
 				if (blockKeyboardInput)
 				{
-					await UniTask.Yield();
+					await UniTask.Yield(inputManagerCancellationToken.Token);
 
 					continue;
 				}
@@ -71,7 +80,7 @@ namespace Modules.InputManager
 					item.Item2.Invoke(item.Item1, null);
 				}
 
-				await UniTask.Yield();
+				await UniTask.Yield(inputManagerCancellationToken.Token);
 			}
 		}
 

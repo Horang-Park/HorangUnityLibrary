@@ -1,3 +1,4 @@
+using System;
 using _TestSamples;
 using Modules.API;
 using Modules.CameraManager;
@@ -28,6 +29,7 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 	{
 		SceneManager.Instance.isLoadDone.Subscribe(OnLoadDone);
 		SceneManager.Instance.isUnloadDone.Subscribe(OnUnloadDone);
+		SceneManager.Instance.currentActiveScene.Subscribe(OnSceneChange);
 
 		var www = UnityWebRequest.Get("https://api.biboboo.com/api/splash");
 		var res = await Requester.Send(www, msg => msg.ToLog(LogPriority.Error));
@@ -66,18 +68,23 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		}
 	}
 
+	private void OnSceneChange(Scene observer)
+	{
+		Logger.Log(LogPriority.Debug, $"SceneName: {observer.name} / ScenePath: {observer.path}");
+	}
+
 	public void OnKeyboardKeyDown()
 	{
-		if (Input.GetKeyDown(KeyCode.F1))
-		{
-			// var path = Application.streamingAssetsPath + "/SampleZipZip.zip";
-			// var files = Compression.GetFileListInZip(path);
-			//
-			// foreach (var name in files)
-			// {
-			// 	name.ToLog(LogPriority.Debug);
-			// }
-		}
+		// if (Input.GetKeyDown(KeyCode.F1))
+		// {
+		// 	var path = Application.streamingAssetsPath + "/SampleZipZip.zip";
+		// 	var files = Compression.GetFileListInZip(path);
+		// 	
+		// 	foreach (var name in files)
+		// 	{
+		// 		name.ToLog(LogPriority.Debug);
+		// 	}
+		// }
 		
 		// if (Input.GetKeyDown(KeyCode.F2))
 		// {
@@ -111,6 +118,25 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		// {
 		// 	StopwatchManager.Instance.CurrentTime("Tester").ToString().ToLog(LogPriority.Debug);
 		// }
+		
+		if (Input.GetKeyDown(KeyCode.F1))
+		{
+			SceneManager.Instance.LoadScene("1_LoadTestScene 1", LoadSceneMode.Additive);
+			SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Additive);
+			SceneManager.Instance.LoadScene("3_LoadTestScene 3", LoadSceneMode.Additive);
+		}
+		if (Input.GetKeyDown(KeyCode.F2))
+		{
+			SceneManager.Instance.UnloadScene();
+		}
+		if (Input.GetKeyDown(KeyCode.F3))
+		{
+			SceneManager.Instance.LoadScene("2_LoadTestScene 2", LoadSceneMode.Single);
+		}
+		if (Input.GetKeyDown(KeyCode.F4))
+		{
+			SceneManager.Instance.LoadScene("0_SampleTestScene", LoadSceneMode.Single);
+		}
 
 		// if (Input.GetKeyDown(KeyCode.F2))
 		// {

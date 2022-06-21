@@ -1,4 +1,5 @@
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,9 +15,9 @@ public class SceneAutoPasser : MonoBehaviour
 	private void Awake()
 	{
 		Observable.FromCoroutine(MoveToNextScene)
-			.DoOnCompleted(() =>
+			.DoOnCompleted(async () =>
 			{
-				UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextSceneName);
+				await UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextSceneName);
 				
 				Logger.Log(LogPriority.Information, $"{nextSceneName} 씬으로 이동합니다.");
 				

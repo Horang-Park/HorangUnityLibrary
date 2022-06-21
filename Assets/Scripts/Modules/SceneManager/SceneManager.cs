@@ -4,8 +4,6 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Structural;
 using UniRx;
-using UnityEditor;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utilities;
 using Logger = Utilities.Logger;
@@ -17,9 +15,7 @@ namespace Modules.SceneManager
 		private readonly List<string> sceneNames = new();
 		private readonly Stack<Scene> sceneStack = new();
 
-		private Scene currentActiveScene;
-
-		public ReactiveProperty<Scene> CurrentActiveScene;
+		public ReactiveProperty<Scene> currentActiveScene;
 		public BoolReactiveProperty isLoadDone;
 		public BoolReactiveProperty isUnloadDone;
 
@@ -28,7 +24,7 @@ namespace Modules.SceneManager
 		/// </summary>
 		/// <param name="sceneName">로드할 씬 이름</param>
 		/// <param name="loadSceneMode">로드 모드</param>
-		public void LoadScene(string sceneName, LoadSceneMode loadSceneMode)
+		public async void LoadScene(string sceneName, LoadSceneMode loadSceneMode)
 		{
 			if (IsValidSceneName(sceneName) is false)
 			{
@@ -49,24 +45,36 @@ namespace Modules.SceneManager
 				sceneStack.Clear();
 			}
 
-			Observable.FromMicroCoroutine(() => SceneLoad(loadSceneMode, sceneName)).Subscribe();
+			await SceneLoad(loadSceneMode, sceneName);
 		}
 
 		/// <summary>
 		/// 씬 언로드 (씬 로드한 순서대로 언로드 함)
 		/// </summary>
-		public void UnloadScene()
+		public async void UnloadScene()
 		{
 			if (sceneStack.Count == 1)
 			{
 				Logger.Log(LogPriority.Error, "마지막 씬은 언로드 할 수 없습니다.");
+				
+				currentActiveScene.Value = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
 
 				return;
 			}
 
 			var scene = sceneStack.Pop();
 
-			Observable.FromMicroCoroutine(() => SceneUnload(scene)).Subscribe();
+			await SceneUnload(scene);
+		}
+
+		/// <summary>
+		/// 현재 활성화 된 씬을 현재 씬으로 세팅
+		/// </summary>
+		public void SetCurrentScene()
+		{
+			currentActiveScene.Value = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+			
+			sceneStack.Push(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
 		}
 
 		protected override void Awake()
@@ -88,13 +96,6 @@ namespace Modules.SceneManager
 			}
 		}
 
-		private void Start()
-		{
-			currentActiveScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-
-			sceneStack.Push(currentActiveScene);
-		}
-
 		private IEnumerator SceneLoad(LoadSceneMode loadSceneMode, string sceneName)
 		{
 			var ao = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
@@ -110,9 +111,12 @@ namespace Modules.SceneManager
 			
 			UnityEngine.SceneManagement.SceneManager.SetActiveScene(scene);
 
-			currentActiveScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-
-			sceneStack.Push(scene);
+			currentActiveScene.Value = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+			
+			if (IsAlreadyContainScene(currentActiveScene.Value) is false)
+			{
+				sceneStack.Push(scene);
+			}
 
 			isLoadDone.Value = false;
 		}
@@ -134,7 +138,7 @@ namespace Modules.SceneManager
 			{
 				UnityEngine.SceneManagement.SceneManager.SetActiveScene(lastScene);
 
-				currentActiveScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+				currentActiveScene.Value = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
 			}
 
 			isUnloadDone.Value = false;
@@ -143,6 +147,8 @@ namespace Modules.SceneManager
 		private bool IsValidSceneName(string sceneName) => sceneNames.Contains(sceneName);
 
 		private static bool IsAlreadyLoadedScene(string sceneName) => UnityEngine.SceneManagement.SceneManager.GetSceneByName(sceneName).isLoaded;
+
+		private bool IsAlreadyContainScene(Scene scene) => sceneStack.Contains(scene);
 	}
 }
 

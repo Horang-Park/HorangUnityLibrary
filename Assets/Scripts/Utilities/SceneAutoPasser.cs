@@ -1,6 +1,4 @@
-using System.Collections;
 using Cysharp.Threading.Tasks;
-using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
 using Utilities;
@@ -9,25 +7,17 @@ using Logger = Utilities.Logger;
 public class SceneAutoPasser : MonoBehaviour
 {
 	public string nextSceneName;
-	public float delayTime;
+	public int delayMillisecond;
 	public UnityEvent onMoveNextScene;
 
-	private void Awake()
+	private async void Awake()
 	{
-		Observable.FromCoroutine(MoveToNextScene)
-			.DoOnCompleted(async () =>
-			{
-				await UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextSceneName);
-				
-				Logger.Log(LogPriority.Information, $"{nextSceneName} 씬으로 이동합니다.");
-				
-				onMoveNextScene?.Invoke();
-			})
-			.Subscribe();
-	}
+		await UniTask.Delay(delayMillisecond);
 
-	private IEnumerator MoveToNextScene()
-	{
-		yield return new WaitForSeconds(delayTime);
+		await UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextSceneName);
+
+		Logger.Log(LogPriority.Information, $"{nextSceneName} 씬으로 이동합니다.");
+
+		onMoveNextScene?.Invoke();
 	}
 }

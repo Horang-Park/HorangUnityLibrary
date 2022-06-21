@@ -172,7 +172,7 @@ namespace Modules.StopwatchManager
 				return;
 			}
 
-			Logger.Log(LogPriority.Verbose, $"{key} 이름을 갖고 있는 스톱워치가 없어, 새로 생성합니다.");
+			Logger.Log(LogPriority.Information, $"{key} 이름을 갖고 있는 스톱워치가 없어, 새로 생성합니다.");
 
 			var st = new Stopwatch();
 			st.Reset();

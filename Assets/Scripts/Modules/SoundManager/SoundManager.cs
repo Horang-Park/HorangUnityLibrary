@@ -46,7 +46,7 @@ namespace Modules.SoundManager
 			
 			if (IsExistSoundObjectKey(hashKey) is false)
 			{
-				Logger.Log(LogPriority.Verbose, $"{clipData.name}의 사운드 객체가 없어, 새로 생성합니다.");
+				Logger.Log(LogPriority.Information, $"{clipData.name}의 사운드 객체가 없어, 새로 생성합니다.");
 
 				soundObject = CreateAudioObject(clipData);
 			}

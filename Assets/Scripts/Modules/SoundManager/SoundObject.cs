@@ -225,7 +225,6 @@ namespace Modules.SoundManager
 					continue;
 				}
 
-				//CurrentPlayTime.OnNext(audioSource.time);
 				observer.OnNext(audioSource.time);
 
 				yield return null;

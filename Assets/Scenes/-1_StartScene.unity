@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextSceneName: 0_SampleTestScene
-  delayTime: 1
+  delayTime: 0
   onMoveNextScene:
     m_PersistentCalls:
       m_Calls: []

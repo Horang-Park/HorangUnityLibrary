@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using Cysharp.Threading.Tasks;
 using Modules.InputManager.Interfaces.KeyboardInput;
 using Modules.InputManager.Interfaces.MouseInput;
 using Structural;
@@ -23,12 +24,12 @@ namespace Modules.InputManager
 		[HideInInspector] public bool blockMouseInput;
 		[HideInInspector] public bool blockKeyboardInput;
 
-		protected override void Awake()
+		protected override async void Awake()
 		{
 			base.Awake();
 
-			Observable.FromMicroCoroutine(FindMouseInputImplementations).Subscribe().AddTo(this);
-			Observable.FromMicroCoroutine(FindKeyboardInputImplementations).Subscribe().AddTo(this);
+			await Observable.FromMicroCoroutine(FindMouseInputImplementations).ToUniTask();
+			await Observable.FromMicroCoroutine(FindKeyboardInputImplementations).ToUniTask();
 		}
 
 		private void Start()
@@ -125,7 +126,7 @@ namespace Modules.InputManager
 			}
 
 			stopwatch.Stop();
-			Logger.Log(LogPriority.Verbose, $"Mouse input 초기화 완료까지 걸린 시간: {stopwatch.ElapsedMilliseconds}ms");
+			Logger.Log(LogPriority.Information, $"Mouse input 초기화 완료까지 걸린 시간: {stopwatch.ElapsedMilliseconds}ms");
 			stopwatch.Reset();
 		}
 
@@ -177,7 +178,7 @@ namespace Modules.InputManager
 			}
 
 			stopwatch.Stop();
-			Logger.Log(LogPriority.Verbose, $"Keyboard input 초기화 완료까지 걸린 시간: {stopwatch.ElapsedMilliseconds}ms");
+			Logger.Log(LogPriority.Information, $"Keyboard input 초기화 완료까지 걸린 시간: {stopwatch.ElapsedMilliseconds}ms");
 			stopwatch.Reset();
 		}
 	}

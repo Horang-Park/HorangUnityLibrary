@@ -23,7 +23,7 @@ namespace Modules.FSM
 			CurrentState = startState;
 			CurrentState.Enter();
 
-			Logger.Log(LogPriority.Verbose, $"[{CurrentState.StateName}] 상태로 초기화 및 FSM 시작되었습니다.");
+			Logger.Log(LogPriority.Information, $"[{CurrentState.StateName}] 상태로 초기화 및 FSM 시작되었습니다.");
 			
 			CurrentState.LateInitialize();
 		}
@@ -39,7 +39,7 @@ namespace Modules.FSM
 			CurrentState = newState;
 			CurrentState.Enter();
 			
-			Logger.Log(LogPriority.Verbose, $"[{beforeStateName}] 상태에서 [{CurrentState.StateName}] 상태로 변경되었습니다.");
+			Logger.Log(LogPriority.Information, $"[{beforeStateName}] 상태에서 [{CurrentState.StateName}] 상태로 변경되었습니다.");
 			
 			CurrentState.LateInitialize();
 		}

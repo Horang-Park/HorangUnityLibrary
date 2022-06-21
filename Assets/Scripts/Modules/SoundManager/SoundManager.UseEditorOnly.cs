@@ -20,7 +20,7 @@ namespace Modules.SoundManager
 			
 			Instance.audioClipDatas.Add(audioClipData.hashKey, audioClipData);
 			
-			Logger.Log(LogPriority.Verbose, $"{audioClipData.name} 오디오 클립이 등록되었습니다.");
+			Logger.Log(LogPriority.Information, $"{audioClipData.name} 오디오 클립이 등록되었습니다.");
 		}
 
 		public static bool RemoveSpecificAudioClip(int key)

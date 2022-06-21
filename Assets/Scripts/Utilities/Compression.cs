@@ -26,7 +26,7 @@ namespace Utilities
 				
 				ZipFile.CreateFromDirectory(sourceDirectoryPath, destinationPath);
 				
-				Logger.Log(LogPriority.Verbose, $"{destinationPath} 경로에 {sourceDirectoryPath} 의 Zip 파일을 압축했습니다.");
+				Logger.Log(LogPriority.Information, $"{destinationPath} 경로에 {sourceDirectoryPath} 의 Zip 파일을 압축했습니다.");
 
 				return true;
 			}
@@ -55,7 +55,7 @@ namespace Utilities
 				
 				ZipFile.ExtractToDirectory(sourceDirectoryPath, destinationPath);
 				
-				Logger.Log(LogPriority.Verbose, $"{destinationPath} 경로에 {sourceDirectoryPath} 의 압축을 풀었습니다.");
+				Logger.Log(LogPriority.Information, $"{destinationPath} 경로에 {sourceDirectoryPath} 의 압축을 풀었습니다.");
 
 				return true;
 			}

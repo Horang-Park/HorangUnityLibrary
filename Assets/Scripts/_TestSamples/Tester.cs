@@ -63,10 +63,6 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		if (Input.GetMouseButtonDown(0))
 		{
 			"MouseDown".ToLog(LogPriority.Debug);
-
-			var c = CameraManager.Instance.GetCamera("Main Camera");
-
-			c.tag = "Main";
 		}
 	}
 

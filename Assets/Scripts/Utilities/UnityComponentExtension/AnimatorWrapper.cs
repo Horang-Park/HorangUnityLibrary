@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 
 namespace Utilities.UnityComponentExtension
@@ -12,11 +11,11 @@ namespace Utilities.UnityComponentExtension
 
 		private readonly Dictionary<int, AnimatorControllerParameterType> animatorParameterTypes = new();
 		
-		public void StartAnimation<T>(string parameterName, T setValue = default)
+		public void SetAnimation<T>(string parameterName, T setValue = default)
 		{
 			if (typeof(T).IsPrimitive is false)
 			{
-				Logger.Log(LogPriority.Exception, $"T는 float, int, bool 형식만 지원합니다.");
+				Logger.Log(LogPriority.Exception, "T는 float, int, bool 형식만 지원합니다.");
 
 				throw new ArgumentException();
 			}
@@ -49,8 +48,6 @@ namespace Utilities.UnityComponentExtension
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
-
-			HashCode.Combine(0);
 		}
 
 		private void Awake()

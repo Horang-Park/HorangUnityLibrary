@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,8 +7,6 @@ using Cysharp.Threading.Tasks;
 using Modules.InputManager.Interfaces.KeyboardInput;
 using Modules.InputManager.Interfaces.MouseInput;
 using Structural;
-using UniRx;
-using UnityEditor;
 using UnityEngine;
 using Utilities;
 using Logger = Utilities.Logger;
@@ -21,30 +18,30 @@ namespace Modules.InputManager
 		private readonly List<(object, MethodInfo)> inputMouseActions = new();
 		private readonly List<(object, MethodInfo)> inputKeyboardActions = new();
 
-		[HideInInspector] public bool blockMouseInput;
-		[HideInInspector] public bool blockKeyboardInput;
+		/*[HideInInspector]*/ public bool blockMouseInput;
+		/*[HideInInspector]*/ public bool blockKeyboardInput;
 
 		protected override async void Awake()
 		{
 			base.Awake();
 
-			await Observable.FromMicroCoroutine(FindMouseInputImplementations).ToUniTask();
-			await Observable.FromMicroCoroutine(FindKeyboardInputImplementations).ToUniTask();
+			await UniTask.RunOnThreadPool(FindMouseInputImplementations);
+			await UniTask.RunOnThreadPool(FindKeyboardInputImplementations);
 		}
 
 		private void Start()
 		{
-			Observable.FromMicroCoroutine(MouseUpdate).Subscribe().AddTo(this);
-			Observable.FromMicroCoroutine(KeyboardUpdate).Subscribe().AddTo(this);
+			UniTask.RunOnThreadPool(MouseUpdate);
+			UniTask.RunOnThreadPool(KeyboardUpdate);
 		}
 
-		private IEnumerator MouseUpdate()
+		private async UniTask MouseUpdate()
 		{
 			while (true)
 			{
 				if (blockMouseInput)
 				{
-					yield return null;
+					await UniTask.Yield();
 
 					continue;
 				}
@@ -54,17 +51,17 @@ namespace Modules.InputManager
 					item.Item2.Invoke(item.Item1, null);
 				}
 
-				yield return null;
+				await UniTask.Yield();
 			}
 		}
 
-		private IEnumerator KeyboardUpdate()
+		private async UniTask KeyboardUpdate()
 		{
 			while (true)
 			{
 				if (blockKeyboardInput)
 				{
-					yield return null;
+					await UniTask.Yield();
 
 					continue;
 				}
@@ -74,19 +71,24 @@ namespace Modules.InputManager
 					item.Item2.Invoke(item.Item1, null);
 				}
 
-				yield return null;
+				await UniTask.Yield();
 			}
 		}
 
-		private IEnumerator FindMouseInputImplementations()
+		private async UniTask FindMouseInputImplementations()
 		{
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 
 			var mouseInputType = typeof(IMouseInput);
-			var mouseInputImplementationTypes = System.AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany(s => s.GetTypes())
-				.Where(p => mouseInputType.IsAssignableFrom(p) && !p.IsInterface && p.IsClass && !p.IsAbstract);
+			var mouseInputImplementationTypes = await GetTypes();
+			
+			async UniTask<IEnumerable<Type>> GetTypes()
+			{
+				var types = await UniTask.RunOnThreadPool(() => AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()));
+					
+				return types.Where(p => mouseInputType.IsAssignableFrom(p) && !p.IsInterface && p.IsClass && !p.IsAbstract);
+			}
 
 			foreach (var item in mouseInputImplementationTypes)
 			{
@@ -94,8 +96,6 @@ namespace Modules.InputManager
 				{
 					if (!implementationMethod.Name.Contains("Mouse"))
 					{
-						yield return null;
-
 						continue;
 					}
 
@@ -120,25 +120,30 @@ namespace Modules.InputManager
 					var implementationClassInstance = (object)GameObject.Find(item.FullName)?.GetComponent(item.FullName) ?? Activator.CreateInstance(instanceType);
 
 					inputMouseActions.Add((implementationClassInstance, implementationMethod));
-
-					yield return null;
 				}
 			}
 
 			stopwatch.Stop();
 			Logger.Log(LogPriority.Information, $"Mouse input 초기화 완료까지 걸린 시간: {stopwatch.ElapsedMilliseconds}ms");
 			stopwatch.Reset();
+
+			await UniTask.CompletedTask;
 		}
 
-		private IEnumerator FindKeyboardInputImplementations()
+		private async UniTask FindKeyboardInputImplementations()
 		{
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 
 			var keyboardInputType = typeof(IKeyboardInput);
-			var keyboardInputImplementationTypes = System.AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany(s => s.GetTypes())
-				.Where(p => keyboardInputType.IsAssignableFrom(p) && !p.IsInterface && p.IsClass && !p.IsAbstract);
+			var keyboardInputImplementationTypes = await GetTypes();
+			
+			async UniTask<IEnumerable<Type>> GetTypes()
+			{
+				var types = await UniTask.RunOnThreadPool(() => AppDomain.CurrentDomain.GetAssemblies().SelectMany(s => s.GetTypes()));
+					
+				return types.Where(p => keyboardInputType.IsAssignableFrom(p) && !p.IsInterface && p.IsClass && !p.IsAbstract);
+			}
 
 			foreach (var item in keyboardInputImplementationTypes)
 			{
@@ -146,8 +151,6 @@ namespace Modules.InputManager
 				{
 					if (!implementationMethod.Name.Contains("Keyboard"))
 					{
-						yield return null;
-
 						continue;
 					}
 
@@ -172,14 +175,14 @@ namespace Modules.InputManager
 					var implementationClassInstance = (object)GameObject.Find(item.FullName)?.GetComponent(item.FullName) ?? Activator.CreateInstance(instanceType);
 
 					inputKeyboardActions.Add((implementationClassInstance, implementationMethod));
-
-					yield return null;
 				}
 			}
 
 			stopwatch.Stop();
 			Logger.Log(LogPriority.Information, $"Keyboard input 초기화 완료까지 걸린 시간: {stopwatch.ElapsedMilliseconds}ms");
 			stopwatch.Reset();
+			
+			await UniTask.CompletedTask;
 		}
 	}
 }

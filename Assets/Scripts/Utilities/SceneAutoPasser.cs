@@ -18,7 +18,7 @@ public class SceneAutoPasser : MonoBehaviour
 			{
 				UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextSceneName);
 				
-				Logger.Log(LogPriority.Verbose, $"{nextSceneName} 씬으로 이동합니다.");
+				Logger.Log(LogPriority.Information, $"{nextSceneName} 씬으로 이동합니다.");
 				
 				onMoveNextScene?.Invoke();
 			})

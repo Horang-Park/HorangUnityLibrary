@@ -19,7 +19,7 @@ namespace Modules.UIManager
 			
 			gameObject.SetActive(true);
 
-			OnAfterShowInitialize();
+			OnShowInitialize();
 		}
 
 		public virtual void Hide()
@@ -29,7 +29,7 @@ namespace Modules.UIManager
 				return;
 			}
 
-			OnAfterHideInitialize();
+			OnHideInitialize();
 			
 			gameObject.SetActive(false);
 		}
@@ -44,16 +44,19 @@ namespace Modules.UIManager
 			Initialize();
 		}
 
-		protected virtual void OnAfterShowInitialize()
+		protected virtual void OnShowInitialize()
 		{
 			Logger.Log(LogPriority.Information, $"{gameObject.name} UI가 켜지고 초기화 되었습니다.");
 		}
 
-		protected virtual void OnAfterHideInitialize()
+		protected virtual void OnHideInitialize()
 		{
 			Logger.Log(LogPriority.Information, $"{gameObject.name} UI가 숨겨지고 초기화 되었습니다.");
 		}
 
+		/// <summary>
+		/// Awake 또는 Enable 될 때 최초 1회만 실행
+		/// </summary>
 		protected virtual void OnInitialize()
 		{
 			Logger.Log(LogPriority.Information, $"{gameObject.name} UI가 초기화 되었습니다.");

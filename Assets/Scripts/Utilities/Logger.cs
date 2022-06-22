@@ -54,6 +54,7 @@ namespace Utilities
 		/// <param name="message">메세지</param>
 		public static void Log(LogPriority priority, string message)
 		{
+#if DEBUG_MODE_LOG
 			var st = new StackTrace(true);
 			var sf = st.GetFrame(_isInternalLogCall ? 2 : 1);
 			var fn = Path.GetFileNameWithoutExtension(sf.GetFileName()?.Split(PathSeparator, StringSplitOptions.RemoveEmptyEntries)[^1]);
@@ -92,6 +93,7 @@ namespace Utilities
 			sb.Clear();
 
 			_isInternalLogCall = false;
+#endif
 		}
 
 		/// <summary>
@@ -105,11 +107,13 @@ namespace Utilities
 		/// <param name="logPriority"></param>
 		public static string ToLog(this string message, LogPriority logPriority)
 		{
+#if DEBUG_MODE_LOG
 			_isInternalLogCall = true;
 			
 			Log(logPriority, message);
-
+#endif
 			return message;
+
 		}
 	}
 }

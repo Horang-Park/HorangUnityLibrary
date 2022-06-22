@@ -56,7 +56,7 @@ namespace Utilities
 
 		public static async UniTask<List<Sprite>> LoadManyFromResources(IEnumerable<string> paths)
 		{
-			var tasks = Enumerable.Select(paths, LoadFromResources).ToList();
+			var tasks = Enumerable.Select(paths, LoadFromResources);
 			var loadedSprites = await UniTask.WhenAll(tasks);
 
 			return loadedSprites.ToList();

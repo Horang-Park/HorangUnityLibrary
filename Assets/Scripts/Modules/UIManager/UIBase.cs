@@ -44,14 +44,20 @@ namespace Modules.UIManager
 			Initialize();
 		}
 
+		/// <summary>
+		/// UI가 활성화 될 때 마다 실행
+		/// </summary>
 		protected virtual void OnShowInitialize()
 		{
 			Logger.Log(LogPriority.Information, $"{gameObject.name} UI가 켜지고 초기화 되었습니다.");
 		}
 
+		/// <summary>
+		/// UI가 비활성화 될 때 마다 실행
+		/// </summary>
 		protected virtual void OnHideInitialize()
 		{
-			Logger.Log(LogPriority.Information, $"{gameObject.name} UI가 숨겨지고 초기화 되었습니다.");
+			Logger.Log(LogPriority.Information, $"{gameObject.name} UI가 초기화되고 꺼졌습니다.");
 		}
 
 		/// <summary>

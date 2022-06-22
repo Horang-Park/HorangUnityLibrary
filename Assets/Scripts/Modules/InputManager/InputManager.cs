@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -62,6 +62,7 @@ namespace Modules.InputManager
 
 				await UniTask.Yield(inputManagerCancellationToken.Token);
 			}
+			// ReSharper disable once FunctionNeverReturns
 		}
 
 		private async UniTaskVoid KeyboardUpdate()
@@ -82,6 +83,7 @@ namespace Modules.InputManager
 
 				await UniTask.Yield(inputManagerCancellationToken.Token);
 			}
+			// ReSharper disable once FunctionNeverReturns
 		}
 
 		private async UniTaskVoid FindMouseInputImplementations()

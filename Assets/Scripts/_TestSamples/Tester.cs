@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using _TestSamples;
+using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Linq;
 using Modules.API;
 using Modules.CameraManager;
 using Modules.InputManager.Interfaces.KeyboardInput;
@@ -7,6 +10,7 @@ using Modules.InputManager.Interfaces.MouseInput;
 using Modules.SoundManager;
 using Modules.StopwatchManager;
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -75,6 +79,11 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 
 	public void OnKeyboardKeyDown()
 	{
+		if (Input.GetKeyDown(KeyCode.F5))
+		{
+			UniTask.Create(GetSprite3);
+		}
+		
 		// if (Input.GetKeyDown(KeyCode.F1))
 		// {
 		// 	var path = Application.streamingAssetsPath + "/SampleZipZip.zip";
@@ -184,5 +193,39 @@ public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown
 		// {
 		// 	fsmTestFacade.ChangeState();
 		// }
+	}
+
+	private async UniTask GetSprite1()
+	{
+		var s = await LoadImage.LoadFromSpecificPath(Application.streamingAssetsPath + "/illust_bottom.png");
+
+		s.rect.width.ToString().ToLog(LogPriority.Debug);
+		s.rect.height.ToString().ToLog(LogPriority.Debug);
+	}
+	
+	private async UniTask GetSprite2()
+	{
+		var s = await LoadImage.LoadFromResources("illust_bottom");
+
+		s.rect.width.ToString().ToLog(LogPriority.Debug);
+		s.rect.height.ToString().ToLog(LogPriority.Debug);
+	}
+	
+	private async UniTask GetSprite3()
+	{
+		List<string> paths = new();
+		
+		paths.Add("Sprites/illust_bottom");
+		paths.Add("Sprites/bg_aispeaking_ln_r");
+		paths.Add("Sprites/book_inside");
+		paths.Add("Sprites/image_mask");
+
+		var s = await LoadImage.LoadManyFromResources(paths);
+		
+		foreach (var ss in s)
+		{
+			ss.rect.width.ToString().ToLog(LogPriority.Debug);
+			ss.rect.height.ToString().ToLog(LogPriority.Debug);
+		}
 	}
 }

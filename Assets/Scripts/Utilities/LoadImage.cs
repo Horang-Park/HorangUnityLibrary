@@ -39,19 +39,15 @@ namespace Utilities
 		{
 			var loadObject = await Resources.LoadAsync<Sprite>(path);
 
-			switch (loadObject)
+			if (loadObject is not null)
 			{
-				case null:
-					Logger.Log(LogPriority.Exception, $"{path} 경로에 해당하는 파일이 존재하지 않습니다.");
-
-					throw new FileNotFoundException();
-				case Sprite sprite:
-					return sprite;
-				default:
-					Logger.Log(LogPriority.Exception, $"{path} 파일은 스프라이트 파일이 아닙니다.");
-
-					throw new FileLoadException();
+				return loadObject as Sprite;
 			}
+			
+			Logger.Log(LogPriority.Exception, $"{path} 경로에 해당하는 파일이 존재하지 않거나 해당 파일이 스프라이트가 아닙니다.");
+
+			throw new FileLoadException();
+
 		}
 
 		public static async UniTask<List<Sprite>> LoadManyFromResources(IEnumerable<string> paths)

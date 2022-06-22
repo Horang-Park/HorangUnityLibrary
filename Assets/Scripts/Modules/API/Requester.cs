@@ -12,6 +12,8 @@ namespace Modules.API
 	{
 		public static async UniTask<string> Send(UnityWebRequest unityWebRequest, Action<string> onFailure = null)
 		{
+			var progress = Progress.Create<float>(x => Logger.Log(LogPriority.Information, $"API Request progress: {x * 100.0f}%"));
+
 			var sb = new StringBuilder();
 			sb.Append("API Method: ");
 			sb.Append(unityWebRequest.method);
@@ -20,8 +22,8 @@ namespace Modules.API
 			sb.Append(unityWebRequest.url);
 
 			Logger.Log(LogPriority.Information, $"API Request Send Info: {sb}");
-			
-			var operation = await unityWebRequest.SendWebRequest();
+
+			var operation = await unityWebRequest.SendWebRequest().ToUniTask(progress: progress);
 
 			if (operation.result is UnityWebRequest.Result.Success)
 			{

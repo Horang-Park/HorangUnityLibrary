@@ -34,8 +34,8 @@ namespace Modules.InputManager
 
 		private void Start()
 		{
-			UniTask.RunOnThreadPool(MouseUpdate, cancellationToken: this.GetCancellationTokenOnDestroy());
-			UniTask.RunOnThreadPool(KeyboardUpdate, cancellationToken: this.GetCancellationTokenOnDestroy());
+			UniTask.RunOnThreadPool(MouseUpdate);
+			UniTask.RunOnThreadPool(KeyboardUpdate);
 		}
 
 		private void OnDestroy()
@@ -44,7 +44,7 @@ namespace Modules.InputManager
 			inputManagerCancellationToken.Dispose();
 		}
 
-		private async UniTask MouseUpdate()
+		private async UniTaskVoid MouseUpdate()
 		{
 			while (true)
 			{
@@ -64,7 +64,7 @@ namespace Modules.InputManager
 			}
 		}
 
-		private async UniTask KeyboardUpdate()
+		private async UniTaskVoid KeyboardUpdate()
 		{
 			while (true)
 			{
@@ -84,7 +84,7 @@ namespace Modules.InputManager
 			}
 		}
 
-		private async UniTask FindMouseInputImplementations()
+		private async UniTaskVoid FindMouseInputImplementations()
 		{
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
@@ -139,7 +139,7 @@ namespace Modules.InputManager
 			await UniTask.CompletedTask;
 		}
 
-		private async UniTask FindKeyboardInputImplementations()
+		private async UniTaskVoid FindKeyboardInputImplementations()
 		{
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();

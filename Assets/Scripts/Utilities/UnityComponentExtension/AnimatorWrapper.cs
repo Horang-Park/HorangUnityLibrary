@@ -11,15 +11,15 @@ namespace Utilities.UnityComponentExtension
 
 		private readonly Dictionary<int, AnimatorControllerParameterType> animatorParameterTypes = new();
 		
-		public void SetAnimation<T>(string parameterName, T setValue = default)
+		/// <summary>
+		/// 애니메이터 상태 지정
+		/// </summary>
+		/// <param name="parameterName">상태 지정할 파라미터 이름</param>
+		/// <param name="setValue">지정할 값</param>
+		/// <typeparam name="T">int, float, bool 형식</typeparam>
+		/// <exception cref="ArgumentException">parameterName 매개변수가 잘못되었을 경우</exception>
+		public void SetAnimatorState<T>(string parameterName, T setValue = default) where T : IConvertible
 		{
-			if (typeof(T).IsPrimitive is false)
-			{
-				Logger.Log(LogPriority.Exception, "T는 float, int, bool 형식만 지원합니다.");
-
-				throw new ArgumentException();
-			}
-
 			var hashKey = Animator.StringToHash(parameterName);
 
 			if (!IsParameterNameValid(hashKey))
@@ -31,6 +31,7 @@ namespace Utilities.UnityComponentExtension
 			
 			var paramType = animatorParameterTypes[hashKey];
 
+			// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 			switch (paramType)
 			{
 				case AnimatorControllerParameterType.Float:
@@ -45,8 +46,6 @@ namespace Utilities.UnityComponentExtension
 				case AnimatorControllerParameterType.Trigger:
 					animator.SetTrigger(hashKey);
 					break;
-				default:
-					throw new ArgumentOutOfRangeException();
 			}
 		}
 

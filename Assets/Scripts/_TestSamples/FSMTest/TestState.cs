@@ -1,4 +1,5 @@
-﻿using Modules.FSM;
+﻿using System.Collections;
+using Modules.FSM;
 using Modules.InputManager.Interfaces.KeyboardInput;
 using UniRx;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace _TestSamples
 		public override void Enter()
 		{
 			StateName = "TestState";
+
+			Observable.FromCoroutine(SomeCoroutine);
 		}
 
 		public override void LogicUpdate()
@@ -36,6 +39,11 @@ namespace _TestSamples
 			{
 				"테스트 스테이트에서 탭 키 누름".ToLog(LogPriority.Debug);
 			}
+		}
+
+		private IEnumerator SomeCoroutine()
+		{
+			yield return null;
 		}
 	}
 	

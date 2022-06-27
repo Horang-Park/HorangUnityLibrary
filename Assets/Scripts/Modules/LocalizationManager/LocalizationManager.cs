@@ -124,7 +124,7 @@ namespace Modules.LocalizationManager
 
 		}
 
-		private async UniTask<string> LoadLocalizationFile(string path, bool isFileInResourcesFolder = false)
+		private static async UniTask<string> LoadLocalizationFile(string path, bool isFileInResourcesFolder = false)
 		{
 			if (isFileInResourcesFolder)
 			{

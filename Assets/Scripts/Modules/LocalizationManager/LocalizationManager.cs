@@ -2,20 +2,24 @@
 using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
+using Structural;
 using UnityEngine;
 using Utilities;
 using Logger = Utilities.Logger;
 
 namespace Modules.LocalizationManager
 {
-	public static class LocalizationTable
+	public class LocalizationManager : MonoSingleton<LocalizationManager>
 	{
-		private static readonly Dictionary<SystemLanguage, Dictionary<int, string>> textTable = new();
+		private readonly Dictionary<SystemLanguage, Dictionary<int, string>> textTable = new();
 
-		private static SystemLanguage keepUseTableIndex;
-		public static SystemLanguage KeepUseTableIndex
+		private SystemLanguage languageLock;
+		/// <summary>
+		/// 이 값으로 해당 언어 테이블의 값을 계속 불러옴 (설정 필수)
+		/// </summary>
+		public SystemLanguage LanguageLock
 		{
-			set => keepUseTableIndex = value;
+			set => languageLock = value;
 		}
 
 		/// <summary>
@@ -26,7 +30,7 @@ namespace Modules.LocalizationManager
 		/// <param name="isFileInResourcesFolder">파일이 Resources 폴더에 있는지 여부 체크용</param>
 		/// <exception cref="FileLoadException">파일을 불러오지 못했을 때</exception>
 		/// <exception cref="FormatException">언어 파일의 포멧이 잘못되어 있을 때</exception>
-		public static async UniTaskVoid LoadLocalization(SystemLanguage language, string path, bool isFileInResourcesFolder = false)
+		public async UniTaskVoid LoadLocalization(SystemLanguage language, string path, bool isFileInResourcesFolder = false)
 		{
 			var table = new Dictionary<int, string>();
 			var readLines = await LoadLocalizationFile(path, isFileInResourcesFolder);
@@ -90,7 +94,31 @@ namespace Modules.LocalizationManager
 			textTable.Add(language, table);
 		}
 
-		private static async UniTask<string> LoadLocalizationFile(string path, bool isFileInResourcesFolder = false)
+		public string GetLocalization(string key)
+		{
+			var hashKey = key.GetHashCode();
+
+			if (textTable.ContainsKey(languageLock))
+			{
+				var table = textTable[languageLock];
+
+				if (table.ContainsKey(hashKey))
+				{
+					return table[hashKey];
+				}
+				
+				Logger.Log(LogPriority.Exception, $"{languageLock} 언어 테이블에 {key} 값이 없습니다.");
+
+				throw new InvalidDataException("언어 파일의 키 값 혹은 코드 상의 키 값을 확인해주세요.");
+			}
+			
+			Logger.Log(LogPriority.Exception, $"{languageLock} 언어에 해당하는 현지화 테이블이 없습니다.");
+
+			throw new InvalidDataException("LanguageLock에 적절한 언어를 세팅해주세요.");
+
+		}
+
+		private async UniTask<string> LoadLocalizationFile(string path, bool isFileInResourcesFolder = false)
 		{
 			if (isFileInResourcesFolder)
 			{

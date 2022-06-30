@@ -100,7 +100,7 @@ namespace Modules.LocalizationManager
 		/// <param name="key">갖고올 언어 값 키</param>
 		/// <returns>languageLock에 해당하는 언어 값 반환</returns>
 		/// <exception cref="InvalidDataException">언어 값을 찾을 수 없을 때</exception>
-		public string GetLocalization(string key)
+		public string Get(string key)
 		{
 			var hashKey = key.GetHashCode();
 

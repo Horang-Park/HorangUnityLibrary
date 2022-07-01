@@ -54,7 +54,7 @@ namespace Editor
 				panelGameObject = new GameObject("Debug Panel");
 				panelGameObject.AddComponent<Panel>();
 				panelGameObject.AddComponent<HardDontDestroyOnLoad>();
-				panelGameObject.gameObject.hideFlags = HideFlags.HideInInspector | HideFlags.NotEditable | HideFlags.HideInHierarchy;
+				panelGameObject.gameObject.hideFlags = HideFlags.NotEditable;
 			}
 			
 			EnableSymbol(PanelSymbol, "패널이 활성화 되었어요.");

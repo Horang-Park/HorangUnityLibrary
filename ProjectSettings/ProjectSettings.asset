@@ -802,7 +802,7 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
     Android: DEBUG_MODE_LOG
-    Standalone: 
+    Standalone: DEBUG_MODE_LOG;DEBUG_MODE_PANEL
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utilities.Debug;
+using Logger = Utilities.Debug.Logger;
 
 namespace Utilities.UnityComponentExtension
 {

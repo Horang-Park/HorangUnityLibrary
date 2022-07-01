@@ -6,7 +6,8 @@ using Structural;
 using UniRx;
 using UnityEngine.SceneManagement;
 using Utilities;
-using Logger = Utilities.Logger;
+using Utilities.Debug;
+using Logger = Utilities.Debug.Logger;
 
 namespace Modules.SceneManager
 {

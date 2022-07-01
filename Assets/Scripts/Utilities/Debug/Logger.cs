@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace Utilities
+namespace Utilities.Debug
 {
 	public enum LogPriority
 	{

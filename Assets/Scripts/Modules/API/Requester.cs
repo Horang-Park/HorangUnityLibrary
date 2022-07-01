@@ -4,7 +4,8 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using Utilities;
-using Logger = Utilities.Logger;
+using Utilities.Debug;
+using Logger = Utilities.Debug.Logger;
 
 namespace Modules.API
 {

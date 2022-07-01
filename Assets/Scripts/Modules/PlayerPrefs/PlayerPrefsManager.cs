@@ -1,6 +1,7 @@
 using System.IO;
 using Utilities;
-using Logger = Utilities.Logger;
+using Utilities.Debug;
+using Logger = Utilities.Debug.Logger;
 
 namespace Modules.PlayerPrefs
 {

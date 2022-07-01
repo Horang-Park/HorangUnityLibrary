@@ -4,7 +4,8 @@ using Structural;
 using UniRx;
 using UnityEngine;
 using Utilities;
-using Logger = Utilities.Logger;
+using Utilities.Debug;
+using Logger = Utilities.Debug.Logger;
 
 namespace Modules.SoundManager
 {

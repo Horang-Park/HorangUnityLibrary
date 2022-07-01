@@ -2,7 +2,8 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using Utilities;
-using Logger = Utilities.Logger;
+using Utilities.Debug;
+using Logger = Utilities.Debug.Logger;
 
 public class SceneAutoPasser : MonoBehaviour
 {

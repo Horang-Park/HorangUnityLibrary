@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Utilities.Debug;
+using Logger = Utilities.Debug.Logger;
 
 namespace Utilities
 {

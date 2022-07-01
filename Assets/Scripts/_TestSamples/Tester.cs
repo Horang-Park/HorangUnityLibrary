@@ -15,7 +15,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using Utilities;
-using Logger = Utilities.Logger;
+using Utilities.Debug;
+using Logger = Utilities.Debug.Logger;
 using SceneManager = Modules.SceneManager.SceneManager;
 
 public class Tester : MonoBehaviour, IMouseButtonDown, IKeyboardKeyDown

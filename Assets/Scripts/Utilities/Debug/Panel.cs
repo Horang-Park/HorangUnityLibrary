@@ -32,7 +32,8 @@ namespace Utilities.Debug
 #endif
 		
 #if !UNITY_EDITOR
-		private void Awake()
+		[RuntimeInitializeOnLoadMethod]
+		private void CreatePanelGameObject()
 		{
 			var panelGameObject = GameObject.Find("Debug Panel");
 			

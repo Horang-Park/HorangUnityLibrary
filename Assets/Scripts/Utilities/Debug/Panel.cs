@@ -35,6 +35,11 @@ namespace Utilities.Debug
 		[RuntimeInitializeOnLoadMethod]
 		private void CreatePanelGameObject()
 		{
+			if (UnityEngine.Debug.isDebugBuild is false)
+			{
+				return;
+			}
+			
 			var panelGameObject = GameObject.Find("Debug Panel");
 			
 			if (panelGameObject is null)
@@ -48,11 +53,21 @@ namespace Utilities.Debug
 		
 		private void Update()
 		{
+			if (UnityEngine.Debug.isDebugBuild is false)
+			{
+				return;
+			}
+			
 			deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
 		}
 
 		private void OnGUI()
 		{
+			if (UnityEngine.Debug.isDebugBuild is false)
+			{
+				return;
+			}
+
 			var width = Screen.width;
 			var height = Screen.height;
 			var guiStyle = new GUIStyle();

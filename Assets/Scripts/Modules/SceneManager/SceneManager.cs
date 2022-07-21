@@ -4,6 +4,7 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Structural;
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using Utilities;
 using Utilities.Debug;
@@ -16,7 +17,7 @@ namespace Modules.SceneManager
 		private readonly List<string> sceneNames = new();
 		private readonly Stack<Scene> sceneStack = new();
 
-		public ReactiveProperty<Scene> currentActiveScene;
+		public ReactiveProperty<Scene> currentActiveScene = new();
 		public BoolReactiveProperty isLoadDone;
 		public BoolReactiveProperty isUnloadDone;
 

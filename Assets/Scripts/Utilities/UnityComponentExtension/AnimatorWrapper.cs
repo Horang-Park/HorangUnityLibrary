@@ -12,7 +12,7 @@ namespace Utilities.UnityComponentExtension
 		private Animator animator;
 
 		private readonly Dictionary<int, AnimatorControllerParameterType> animatorParameterTypes = new();
-		
+
 		/// <summary>
 		/// 애니메이터 상태 지정
 		/// </summary>
@@ -30,7 +30,7 @@ namespace Utilities.UnityComponentExtension
 
 				throw new ArgumentException();
 			}
-			
+
 			var paramType = animatorParameterTypes[hashKey];
 
 			// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
@@ -51,13 +51,36 @@ namespace Utilities.UnityComponentExtension
 			}
 		}
 
+		public object GetAnimatorState(string parameterName)
+		{
+			var hashKey = Animator.StringToHash(parameterName);
+
+			if (!IsParameterNameValid(hashKey))
+			{
+				Logger.Log(LogPriority.Exception, $"{gameObject.name}의 Animator 컴포넌트에 {parameterName} 이름을 가진 파라미터가 없습니다.");
+
+				throw new ArgumentException();
+			}
+
+			var paramType = animatorParameterTypes[hashKey];
+
+			switch (paramType)
+			{
+				case AnimatorControllerParameterType.Float:
+					return animator.GetFloat(hashKey);
+				case AnimatorControllerParameterType.Int:
+					return animator.GetInteger(hashKey);
+				case AnimatorControllerParameterType.Bool:
+					return animator.GetBool(hashKey);
+			}
+
+			return null;
+		}
+
 		private void Awake()
 		{
 			animator = GetComponent(typeof(Animator)) as Animator;
-		}
 
-		private void Start()
-		{
 			foreach (var param in animator.parameters)
 			{
 				var key = param.nameHash;
@@ -69,7 +92,7 @@ namespace Utilities.UnityComponentExtension
 
 					continue;
 				}
-				
+
 				animatorParameterTypes.Add(key, value);
 			}
 		}
